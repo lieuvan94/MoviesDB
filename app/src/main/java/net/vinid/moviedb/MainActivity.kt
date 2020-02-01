@@ -1,9 +1,9 @@
 package net.vinid.moviedb
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import net.vinid.moviedb.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
