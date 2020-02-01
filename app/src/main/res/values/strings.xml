@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">pay-fresher-moviedb-b</string>
+    <string name="app_name">MoviesDB</string>
+
+    <string name="cd_home">Home</string>
+    <string name="title_home">Home</string>
+    <string name="cd_search">Search</string>
+    <string name="title_search">Search</string>
+    <string name="cd_favorites">Favorites</string>
+    <string name="title_favorites">Favorites</string>
 </resources>
