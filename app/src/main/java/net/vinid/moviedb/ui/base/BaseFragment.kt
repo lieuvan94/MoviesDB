@@ -1,4 +1,4 @@
-package net.vinid.moviedb.base
+package net.vinid.moviedb.ui.base
 
 import android.app.Activity
 import android.content.Context

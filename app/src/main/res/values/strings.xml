@@ -7,4 +7,9 @@
     <string name="title_search">Search</string>
     <string name="cd_favorites">Favorites</string>
     <string name="title_favorites">Favorites</string>
+    <string name="popular_movies_label">Popular</string>
+    <string name="now_playing_movies_label">Now playing</string>
+    <string name="upcoming_movies_label">Upcoming</string>
+    <string name="top_rates_movies_label">Top Rates</string>
+    <string name="genres_label">Genres</string>
 </resources>
