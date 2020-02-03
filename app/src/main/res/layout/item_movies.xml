@@ -9,7 +9,7 @@
 
         <variable
             name="data"
-            type="net.vinid.moviedb.ui.common.recycleview.MoviesItem" />
+            type="net.vinid.moviedb.ui.home.MoviesItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

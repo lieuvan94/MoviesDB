@@ -1,4 +1,4 @@
-package net.vinid.moviedb.ui.common.recycleview
+package net.vinid.moviedb.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,7 +20,7 @@ class GenresViewModel : BaseViewModel(){
     private fun dummyData(){
         val dataList = arrayListOf(
             GenresItem(
-               28,
+                28,
                 "Action"
             ),
             GenresItem(

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="net.vinid.moviedb.ui.common.recycleview.GenresItem" />
+            type="net.vinid.moviedb.ui.home.GenresItem" />
     </data>
 
     <androidx.cardview.widget.CardView

@@ -1,4 +1,4 @@
-package net.vinid.moviedb.ui.common.recycleview
+package net.vinid.moviedb.ui.home
 
 import androidx.databinding.BaseObservable
 

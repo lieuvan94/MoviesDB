@@ -62,7 +62,7 @@ class HomeFragment : BaseFragment() {
         })
     }
 
-    private fun setDataBindingMoviesRecycleView(listMovies : ArrayList<MoviesItem>, recycleView : RecyclerView,space : Int) {
+    private fun setDataBindingMoviesRecycleView(listMovies : ArrayList<MoviesItem>, recycleView : RecyclerView, space : Int) {
         moviesAdapter = MoviesAdapter(listMovies)
         val itemDecoration = ItemOffsetDecoration(space)
         recycleView.apply {

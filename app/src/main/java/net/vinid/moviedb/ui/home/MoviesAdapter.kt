@@ -1,4 +1,4 @@
-package net.vinid.moviedb.ui.common.recycleview
+package net.vinid.moviedb.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,14 +11,14 @@ import net.vinid.moviedb.R
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
-class GenresAdapter(
-    private val dataList: ArrayList<GenresItem>
-) : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
+class MoviesAdapter(
+    private val dataList: ArrayList<MoviesItem>
+) : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
 
-    var onItemClick: (genresItem: GenresItem) -> Unit = { _ -> }
+    var onItemClick: (moviesItem: MoviesItem) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
-        val layoutId = R.layout.item_genres
+        val layoutId = R.layout.item_movies
         // DataBinding
         val binding =
             DataBindingUtil.inflate<ViewDataBinding>(
@@ -35,8 +35,8 @@ class GenresAdapter(
     override fun onBindViewHolder(holder: BindingHolder, position: Int) {
         val data = dataList[position]
         holder.binding.setVariable(BR.data, data)
-        holder.binding.hasPendingBindings()
         holder.binding.executePendingBindings()
+
         holder.itemView.setOnClickListener {
             onItemClick(data)
         }
