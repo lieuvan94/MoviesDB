@@ -35,25 +35,22 @@ object APIClient {
             .readTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
         val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(interceptor)
-        httpClient.addInterceptor(object : Interceptor {
-            @Throws(IOException::class)
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val original: Request = chain.request()
-                val originalUrl =original.url()
-                val url =originalUrl.newBuilder()
-                    .addQueryParameter("api_key",
-                        APISetting.TMDB_API_KEY
-                    )
-                    .build()
+        httpClient.addInterceptor { chain ->
+            val original: Request = chain.request()
+            val originalUrl =original.url()
+            val url =originalUrl.newBuilder()
+                .addQueryParameter("api_key",
+                    APISetting.TMDB_API_KEY
+                )
+                .build()
 
-                val requestBuilder: Request.Builder = original.newBuilder()
-                    .url(url)
-                val request: Request = requestBuilder.build()
-                return chain.proceed(request)
-            }
-        })
+            val requestBuilder: Request.Builder = original.newBuilder()
+                .url(url)
+            val request: Request = requestBuilder.build()
+            chain.proceed(request)
+        }
         okHttpClient = httpClient.build()
     }
 }

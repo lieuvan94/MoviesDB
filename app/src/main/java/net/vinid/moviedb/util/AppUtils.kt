@@ -1,11 +1,9 @@
-package net.vinid.moviedb.util.ext
+package net.vinid.moviedb.util
 
-import android.content.Context
-import android.net.ConnectivityManager
+
+import io.realm.RealmConfiguration
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.data.remote.respone.ListMovieRespone
 import net.vinid.moviedb.data.remote.respone.MovieRespone
-import net.vinid.moviedb.data.repository.MovieRepository
 
 object AppUtils{
     const val CATEGORY_POPULAR = 1
@@ -13,24 +11,31 @@ object AppUtils{
     const val CATEGORY_UPCOMING = 3
     const val CATEGORY_TOP_RATES = 4
 
-    fun isOnline(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
+    const val IMAGE_URL = "https://image.tmdb.org/t/p/w500%s"
+    private const val DB_NAME = "moviedb.realm"
 
     fun convertMovieResponeToMovieEntity(movieRespone: List<MovieRespone>, category: Int, page: Int)
-            : ArrayList<MovieEntity>{
+            : ArrayList<MovieEntity> {
         val listMovieEntity = ArrayList<MovieEntity>()
-        for (movie in movieRespone){
-            val movieEntity = MovieEntity(movie.id, movie.poster_path, movie.adult,
+        for (movie in movieRespone) {
+            val movieEntity = MovieEntity(
+                movie.id, movie.poster_path, movie.adult,
                 movie.overview, movie.release_date, null, movie.original_title,
                 movie.original_language, movie.title, movie.backdrop_path, movie.popularity,
-                movie.vote_count, movie.video, movie.vote_average, category, false, page)
+                movie.vote_count, movie.video, movie.vote_average, category, false, page
+            )
             movieEntity.genreIds?.addAll(movie.genre_ids)
             listMovieEntity.add(movieEntity)
         }
         return listMovieEntity
+    }
+
+    fun initRealmConfig(): RealmConfiguration {
+        return RealmConfiguration.Builder()
+            .name(DB_NAME)
+            .schemaVersion(1)
+            .deleteRealmIfMigrationNeeded()
+            .build()
     }
 }
 

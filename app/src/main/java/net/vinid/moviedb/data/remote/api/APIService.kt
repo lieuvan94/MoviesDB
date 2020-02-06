@@ -1,7 +1,6 @@
 package net.vinid.moviedb.data.remote.api
 
 import io.reactivex.Observable
-import io.reactivex.Single
 import net.vinid.moviedb.data.remote.respone.ListMovieRespone
 import retrofit2.http.GET
 import retrofit2.http.Query
