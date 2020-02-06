@@ -32,6 +32,7 @@ class FavoritesFragment : BaseFragment() {
         return dataBinding.root
     }
 
+
     //endregion
 
 }
