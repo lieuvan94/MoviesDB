@@ -15,12 +15,9 @@
 
             <TextView
                 android:id="@+id/popularTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/popular_movies_label"
-                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/categoryLabelText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.048"
@@ -42,12 +39,9 @@
 
             <TextView
                 android:id="@+id/nowPlayingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/now_playing_movies_label"
-                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/categoryLabelText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.048"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,12 +61,9 @@
 
             <TextView
                 android:id="@+id/upComingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/upcoming_movies_label"
-                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/categoryLabelText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.048"
                 app:layout_constraintStart_toStartOf="parent"
@@ -92,12 +83,9 @@
 
             <TextView
                 android:id="@+id/topRateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/top_rates_movies_label"
-                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/categoryLabelText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.048"
                 app:layout_constraintStart_toStartOf="parent"
@@ -117,12 +105,9 @@
 
             <TextView
                 android:id="@+id/genresTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/genres_label"
-                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/categoryLabelText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.048"
                 app:layout_constraintStart_toStartOf="parent"

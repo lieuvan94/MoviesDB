@@ -40,11 +40,12 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
-                    app:imageUrl="@{data.poster_path}"
+                    app:imageUrl="@{data.posterPath}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/poster_movies_image" />
 
                 <ImageView
                     android:id="@+id/moviesFavImageView"
@@ -100,7 +101,8 @@
             app:layout_constraintDimensionRatio="H,1.5:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintTop_toBottomOf="@id/cardView" />
+            app:layout_constraintTop_toBottomOf="@id/cardView"
+            android:contentDescription="@string/more_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

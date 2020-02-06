@@ -1,12 +1,11 @@
 package net.vinid.moviedb
 
 import android.os.Bundle
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import net.vinid.moviedb.ui.base.BaseActivity
 import net.vinid.moviedb.databinding.ActivityMainBinding
+import net.vinid.moviedb.ui.base.BaseActivity
 import net.vinid.moviedb.util.ext.setupWithNavController
 
 class MainActivity : BaseActivity() {
@@ -30,13 +29,13 @@ class MainActivity : BaseActivity() {
         setupBottomNavigationBar()
     }
 
-    fun showBottomNavigation() {
-        dataBinding.bottomNav.visibility = View.VISIBLE
-    }
-
-    fun hideBottomNavigation() {
-        dataBinding.bottomNav.visibility = View.GONE
-    }
+//    fun showBottomNavigation() {
+//        dataBinding.bottomNav.visibility = View.VISIBLE
+//    }
+//
+//    fun hideBottomNavigation() {
+//        dataBinding.bottomNav.visibility = View.GONE
+//    }
 
     /**
      * Called on first creation and when restoring state.

@@ -29,8 +29,6 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var moviesAdapter: MoviesAdapter
     private lateinit var genresAdapter: GenresAdapter
-    private var listMoviesItem = ArrayList<MoviesItem>()
-    private var listGenresItem = ArrayList<GenresItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,14 +39,13 @@ class HomeFragment : BaseFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
 
-        handelUpdateData()
+        handleUpdateData()
 
         return dataBinding.root
     }
 
-    private fun handelUpdateData() {
-        moviesViewModel.movies.observe(viewLifecycleOwner, Observer {
-            listMoviesItem = it
+    private fun handleUpdateData() {
+        moviesViewModel.movies.observe(viewLifecycleOwner, Observer {listMoviesItem ->
             setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.popularMoviesRecyclerView,5)
             setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.nowPlayingMoviesRecyclerView,5)
             setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.upComingMoviesRecyclerView,5)
@@ -56,8 +53,7 @@ class HomeFragment : BaseFragment() {
 
         })
 
-        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
-            listGenresItem = it
+        genresViewModel.genres.observe(viewLifecycleOwner, Observer {listGenresItem->
             setDataBindingGenresRecycleView(listGenresItem,dataBinding.genresRecyclerView,1)
         })
     }

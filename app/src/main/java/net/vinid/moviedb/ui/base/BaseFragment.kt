@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
  */
 open class BaseFragment : Fragment() {
 
-    protected lateinit var activity: Activity
+    private lateinit var activity: Activity
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -9,8 +9,8 @@ import androidx.databinding.library.baseAdapters.BR
  */
 data class MoviesItem(
     val title : String,
-    val vote_average : Float,
-    val poster_path : String,
+    val voteAverage : Float,
+    val posterPath : String,
     var isFavorite: Boolean         //Favorite Status
 ): BaseObservable(){
 
