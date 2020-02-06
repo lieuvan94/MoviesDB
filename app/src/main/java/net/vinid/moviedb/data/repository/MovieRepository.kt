@@ -1,6 +1,7 @@
 package net.vinid.moviedb.data.repository
 
 import android.content.Context
+import android.graphics.Movie
 import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -37,14 +38,12 @@ class MovieRepository(
 //                movieDAO.deleteAllMovie(realm)
 
                 Log.d(MovieReposTag,"Result size: "+item.results.size)
-                for (movie in item.results){
-                    val movieEntity = MovieEntity(movie.id, movie.poster_path, movie.adult,
-                        movie.overview, movie.release_date, null, movie.original_title,
-                        movie.original_language, movie.title, movie.backdrop_path, movie.popularity,
-                        movie.vote_count, movie.video, movie.vote_average, category, false, page)
-                    movieEntity.genreIds?.addAll(movie.genre_ids)
+                val listMovieEntity = AppUtils
+                    .convertMovieResponeToMovieEntity(item.results, category, page)
+
+                for (movie in listMovieEntity){
                     Log.d(MovieReposTag,"save movie "+movie.title)
-                    movieDAO.saveMovie(movieEntity,realm)
+                    movieDAO.saveMovie(movie,realm)
                 }
             }
 
@@ -113,6 +112,12 @@ class MovieRepository(
                     }
                 }
                 return Observable.empty()
+            }
+
+            override fun convert(requestType: Resource<ListMovieRespone>): Resource<List<MovieEntity>> {
+                val listMovieEntity = AppUtils
+                    .convertMovieResponeToMovieEntity(requestType.data?.results!!, category, page)
+                return Resource.success(listMovieEntity)
             }
         }.result
     }

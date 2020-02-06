@@ -10,9 +10,11 @@ class MovieDAO(realm: Realm) {
     private val TAG = "MovieDAO"
 
     fun saveMovie(movie: MovieEntity, realm: Realm){
+        Log.d(TAG,"Save movie: "+movie.title)
         realm.executeTransactionAsync(object : Realm.Transaction {
             override fun execute(realm: Realm) {
                 realm.copyToRealmOrUpdate(movie)
+                Log.d(TAG,"Save movie success: "+movie.title)
             }
         })
     }
