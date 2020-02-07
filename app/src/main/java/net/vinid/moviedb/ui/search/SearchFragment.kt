@@ -6,20 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import net.vinid.moviedb.R
-import net.vinid.moviedb.base.BaseFragment
 import net.vinid.moviedb.databinding.FragmentSearchBinding
+import net.vinid.moviedb.ui.base.BaseFragment
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
  */
 class SearchFragment : BaseFragment() {
 
-    //region MARK: - private filed
     private lateinit var dataBinding: FragmentSearchBinding
 
-    //endregion
-
-    //region MARK: - Fragment LifeCycle Method
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +27,4 @@ class SearchFragment : BaseFragment() {
 
         return dataBinding.root
     }
-
-    //endregion
 }
