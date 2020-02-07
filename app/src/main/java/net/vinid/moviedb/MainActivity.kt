@@ -1,6 +1,7 @@
 package net.vinid.moviedb
 
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
@@ -18,24 +19,27 @@ class MainActivity : BaseActivity() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
-        } // Else, need to wait for onRestoreInstanceState
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        // Now that BottomNavigationBar has restored its instance state
-        // and its selectedItemId, we can proceed with setting up the
-        // BottomNavigationBar with Navigation
         setupBottomNavigationBar()
     }
 
-//    fun showBottomNavigation() {
-//        dataBinding.bottomNav.visibility = View.VISIBLE
-//    }
-//
-//    fun hideBottomNavigation() {
-//        dataBinding.bottomNav.visibility = View.GONE
-//    }
+    /**
+     * TODO: show BottomNavigation
+     */
+    fun showBottomNavigation() {
+        dataBinding.bottomNav.visibility = View.VISIBLE
+    }
+
+    /**
+     * TODO: hide BottomNavigation
+     */
+    fun hideBottomNavigation() {
+        dataBinding.bottomNav.visibility = View.GONE
+    }
 
     /**
      * Called on first creation and when restoring state.
@@ -49,11 +53,6 @@ class MainActivity : BaseActivity() {
             containerId = R.id.nav_host_container,
             intent = intent
         )
-
-        // Whenever the selected controller changes, setup the action bar.
-//        controller.observe(this, Observer { navController ->
-//            setupActionBarWithNavController(navController)
-//        })
         currentNavController = controller
     }
 

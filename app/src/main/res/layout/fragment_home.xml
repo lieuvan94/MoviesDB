@@ -16,18 +16,18 @@
             <TextView
                 android:id="@+id/popularTextView"
                 android:text="@string/popular_movies_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
+                android:layout_marginStart="@dimen/margin_12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.02" />
+                app:layout_constraintVertical_bias="0.02"
+                tools:ignore="RtlCompat" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/popularMoviesRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -40,16 +40,16 @@
             <TextView
                 android:id="@+id/nowPlayingTextView"
                 android:text="@string/now_playing_movies_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
+                android:layout_marginStart="@dimen/margin_12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popularMoviesRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/popularMoviesRecyclerView"
+                tools:ignore="RtlCompat" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/nowPlayingMoviesRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -62,16 +62,16 @@
             <TextView
                 android:id="@+id/upComingTextView"
                 android:text="@string/upcoming_movies_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
+                android:layout_marginStart="@dimen/margin_12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nowPlayingMoviesRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingMoviesRecyclerView"
+                tools:ignore="RtlCompat" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/upComingMoviesRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -84,16 +84,16 @@
             <TextView
                 android:id="@+id/topRateTextView"
                 android:text="@string/top_rates_movies_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
+                android:layout_marginStart="@dimen/margin_12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/upComingMoviesRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/upComingMoviesRecyclerView"
+                tools:ignore="RtlCompat" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topRatesMoviesRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -106,18 +106,18 @@
             <TextView
                 android:id="@+id/genresTextView"
                 android:text="@string/genres_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
+                android:layout_marginStart="@dimen/margin_12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topRatesMoviesRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/topRatesMoviesRecyclerView"
+                tools:ignore="RtlCompat" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genresRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/margin_20dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"

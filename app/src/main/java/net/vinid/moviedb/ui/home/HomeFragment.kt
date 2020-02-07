@@ -1,8 +1,9 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
-import net.vinid.moviedb.ui.common.recycleview.*
+import net.vinid.moviedb.ui.common.recycleview.ItemOffsetDecoration
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -39,26 +40,25 @@ class HomeFragment : BaseFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
 
-        handleUpdateData()
+        initViewModel()
 
         return dataBinding.root
     }
 
-    private fun handleUpdateData() {
+    private fun initViewModel() {
         moviesViewModel.movies.observe(viewLifecycleOwner, Observer {listMoviesItem ->
-            setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.popularMoviesRecyclerView,5)
-            setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.nowPlayingMoviesRecyclerView,5)
-            setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.upComingMoviesRecyclerView,5)
-            setDataBindingMoviesRecycleView(listMoviesItem,dataBinding.topRatesMoviesRecyclerView,5)
-
+            initMoviesRecycleView(listMoviesItem,dataBinding.popularMoviesRecyclerView,5)
+            initMoviesRecycleView(listMoviesItem,dataBinding.nowPlayingMoviesRecyclerView,5)
+            initMoviesRecycleView(listMoviesItem,dataBinding.upComingMoviesRecyclerView,5)
+            initMoviesRecycleView(listMoviesItem,dataBinding.topRatesMoviesRecyclerView,5)
         })
 
         genresViewModel.genres.observe(viewLifecycleOwner, Observer {listGenresItem->
-            setDataBindingGenresRecycleView(listGenresItem,dataBinding.genresRecyclerView,1)
+            initGenresRecycleView(listGenresItem,dataBinding.genresRecyclerView,1)
         })
     }
 
-    private fun setDataBindingMoviesRecycleView(listMovies : ArrayList<MoviesItem>, recycleView : RecyclerView, space : Int) {
+    private fun initMoviesRecycleView(listMovies : ArrayList<MoviesItem>, recycleView : RecyclerView, space : Int) {
         moviesAdapter = MoviesAdapter(listMovies)
         val itemDecoration = ItemOffsetDecoration(space)
         recycleView.apply {
@@ -69,12 +69,12 @@ class HomeFragment : BaseFragment() {
             this.layoutManager = layoutManager
 
             moviesAdapter.onItemClick ={
-                Toast.makeText(context,"Movies name: "+ it.title,Toast.LENGTH_LONG).show()
+                //TODO: Show movies details
             }
         }
     }
 
-    private fun setDataBindingGenresRecycleView(listGenres : ArrayList<GenresItem>, recycleView : RecyclerView, space : Int) {
+    private fun initGenresRecycleView(listGenres : ArrayList<GenresItem>, recycleView : RecyclerView, space : Int) {
         genresAdapter = GenresAdapter(listGenres)
         val itemDecoration = ItemOffsetDecoration(space)
         recycleView.apply {
@@ -85,7 +85,7 @@ class HomeFragment : BaseFragment() {
             this.layoutManager = layoutManager
 
             genresAdapter.onItemClick ={
-                Toast.makeText(context,"Genres name: "+ it.name,Toast.LENGTH_LONG).show()
+                //TODO: Show movies details
             }
         }
     }
