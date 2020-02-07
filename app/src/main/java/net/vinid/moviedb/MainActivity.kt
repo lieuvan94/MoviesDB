@@ -28,14 +28,14 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * TODO: show BottomNavigation
+     * show BottomNavigation
      */
     fun showBottomNavigation() {
         dataBinding.bottomNav.visibility = View.VISIBLE
     }
 
     /**
-     * TODO: hide BottomNavigation
+     * hide BottomNavigation
      */
     fun hideBottomNavigation() {
         dataBinding.bottomNav.visibility = View.GONE

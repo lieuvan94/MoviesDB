@@ -11,9 +11,6 @@ open class BaseViewModel : ViewModel(){
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    /**
-     * TODO: handle the Rx subscription
-     */
     protected fun addToDisposable(disposable: Disposable) {
         compositeDisposable.remove(disposable)
         compositeDisposable.add(disposable)
