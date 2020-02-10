@@ -61,11 +61,6 @@ class HomeFragment : BaseFragment() {
         genresAdapter = GenresAdapter()
         dataBinding.genresRecyclerView.adapter = this@HomeFragment.genresAdapter
 
-        initRecycleView(dataBinding.includedPopularMovieLayout.moviesRecyclerView)
-        initRecycleView(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView)
-        initRecycleView(dataBinding.includedUpComingMovieLayout.moviesRecyclerView)
-        initRecycleView(dataBinding.includedTopRateMovieLayout.moviesRecyclerView)
-        initRecycleView(dataBinding.genresRecyclerView)
     }
 
     private fun initViewModel() {
@@ -83,14 +78,6 @@ class HomeFragment : BaseFragment() {
     }
     private fun updateGenresList(genress: List<GenresItem>) {
         genresAdapter.setItems(genress)
-    }
-
-    private fun initRecycleView(recycleView : RecyclerView) {
-        recycleView.apply {
-            layoutManager = context?.let { LinearLayoutManager(it) }
-            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            this.layoutManager = layoutManager
-        }
     }
 }
 
