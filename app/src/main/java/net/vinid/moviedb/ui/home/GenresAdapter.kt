@@ -11,10 +11,9 @@ import net.vinid.moviedb.R
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
-class GenresAdapter(
-    private val dataList: ArrayList<GenresItem>
-) : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
+class GenresAdapter : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
 
+    private var dataList: MutableList<GenresItem> = mutableListOf()
     var onItemClick: (genresItem: GenresItem) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
@@ -40,6 +39,17 @@ class GenresAdapter(
         holder.itemView.setOnClickListener {
             onItemClick(data)
         }
+    }
+
+    fun setItems(genress: List<GenresItem>) {
+        val startPosition = this.dataList.size
+        this.dataList.addAll(genress)
+        notifyItemRangeChanged(startPosition, genress.size)
+    }
+
+
+    fun getItem(position: Int): GenresItem {
+        return dataList[position]
     }
 
     class BindingHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)

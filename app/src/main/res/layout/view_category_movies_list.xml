@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_6dp"
+        android:background="@android:color/transparent"
+        android:paddingBottom="@dimen/padding_16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/movieCategoryTitle"
+            style="@style/categoryLabelText"
+            android:layout_marginStart="@dimen/margin_12dp"
+            android:layout_marginLeft="@dimen/margin_12dp"
+            android:gravity="start"
+            android:textSize="@dimen/text_size_20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Category" />
+
+        <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/moviesRecyclerView"
+        android:layout_width="@dimen/width_0dp"
+        android:layout_height="@dimen/height_210dp"
+        android:layout_marginTop="@dimen/margin_6dp"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/margin_6dp"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movieCategoryTitle"
+        tools:listitem="@layout/item_movies" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noDataTextView"
+            android:layout_width="@dimen/width_0dp"
+            android:layout_height="@dimen/height_210dp"
+            android:layout_marginTop="@dimen/margin_6dp"
+            android:layout_marginStart="@dimen/margin_6dp"
+            android:layout_marginEnd="@dimen/margin_6dp"
+            android:text="@string/no_data_movies"
+            android:textColor="@android:color/white"
+            android:textStyle="italic"
+            android:background="@drawable/frame_item_radius5dp_border_white"
+            android:textSize="@dimen/text_size_20sp"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieCategoryTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
