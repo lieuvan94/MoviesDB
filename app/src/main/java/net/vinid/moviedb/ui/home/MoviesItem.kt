@@ -8,6 +8,7 @@ import androidx.databinding.library.baseAdapters.BR
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
 data class MoviesItem(
+    val id : Int,
     val title : String,
     val voteAverage : Float,
     val posterPath : String,

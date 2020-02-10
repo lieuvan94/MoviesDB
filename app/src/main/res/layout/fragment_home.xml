@@ -13,110 +13,62 @@
             android:layout_height="match_parent"
             android:background="@color/backgroundScreen">
 
-            <TextView
-                android:id="@+id/popularTextView"
-                android:text="@string/popular_movies_label"
-                android:textSize="@dimen/text_size_20sp"
-                style="@style/categoryLabelText"
-                android:layout_marginStart="@dimen/margin_12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.02"
-                tools:ignore="RtlCompat" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/popularMoviesRecyclerView"
-                android:layout_width="@dimen/width_0dp"
+            <include
+                android:id="@+id/includedPopularMovieLayout"
+                layout="@layout/view_category_movies_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/nowPlayingTextView"
+                android:layout_marginTop="@dimen/margin_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popularTextView"
-                tools:listitem="@layout/item_movies" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/nowPlayingTextView"
-                android:text="@string/now_playing_movies_label"
-                android:textSize="@dimen/text_size_20sp"
-                style="@style/categoryLabelText"
-                android:layout_marginStart="@dimen/margin_12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popularMoviesRecyclerView"
-                tools:ignore="RtlCompat" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/nowPlayingMoviesRecyclerView"
-                android:layout_width="@dimen/width_0dp"
+            <include
+                android:id="@+id/includedNowPlayingMovieLayout"
+                layout="@layout/view_category_movies_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/upComingTextView"
+                android:layout_marginTop="@dimen/margin_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nowPlayingTextView"
-                tools:listitem="@layout/item_movies" />
+                app:layout_constraintTop_toBottomOf="@id/includedPopularMovieLayout" />
 
-            <TextView
-                android:id="@+id/upComingTextView"
-                android:text="@string/upcoming_movies_label"
-                android:textSize="@dimen/text_size_20sp"
-                style="@style/categoryLabelText"
-                android:layout_marginStart="@dimen/margin_12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nowPlayingMoviesRecyclerView"
-                tools:ignore="RtlCompat" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/upComingMoviesRecyclerView"
-                android:layout_width="@dimen/width_0dp"
+            <include
+                android:id="@+id/includedUpComingMovieLayout"
+                layout="@layout/view_category_movies_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/topRateTextView"
+                android:layout_marginTop="@dimen/margin_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/upComingTextView"
-                tools:listitem="@layout/item_movies" />
+                app:layout_constraintTop_toBottomOf="@id/includedNowPlayingMovieLayout" />
 
-            <TextView
-                android:id="@+id/topRateTextView"
-                android:text="@string/top_rates_movies_label"
-                android:textSize="@dimen/text_size_20sp"
-                style="@style/categoryLabelText"
-                android:layout_marginStart="@dimen/margin_12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/upComingMoviesRecyclerView"
-                tools:ignore="RtlCompat" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/topRatesMoviesRecyclerView"
-                android:layout_width="@dimen/width_0dp"
+            <include
+                android:id="@+id/includedTopRateMovieLayout"
+                layout="@layout/view_category_movies_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/genresTextView"
+                android:layout_marginTop="@dimen/margin_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topRateTextView"
-                tools:listitem="@layout/item_movies" />
+                app:layout_constraintTop_toBottomOf="@id/includedUpComingMovieLayout" />
 
             <TextView
                 android:id="@+id/genresTextView"
-                android:text="@string/genres_label"
-                android:textSize="@dimen/text_size_20sp"
                 style="@style/categoryLabelText"
                 android:layout_marginStart="@dimen/margin_12dp"
+                android:layout_marginLeft="@dimen/margin_12dp"
+                android:layout_marginTop="@dimen/margin_12dp"
+                android:text="@string/genres_label"
+                android:textSize="@dimen/text_size_20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topRatesMoviesRecyclerView"
-                tools:ignore="RtlCompat" />
+                app:layout_constraintTop_toBottomOf="@id/includedTopRateMovieLayout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genresRecyclerView"
                 android:layout_width="@dimen/width_0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_12dp"
                 android:layout_marginBottom="@dimen/margin_20dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -129,6 +81,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-
 
 </layout>

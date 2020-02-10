@@ -14,4 +14,5 @@
     <string name="genres_label">Genres</string>
     <string name="poster_movies_image">Poster Movies Image</string>
     <string name="more_image">More Image</string>
+    <string name="no_data_movies">Movies not available</string>
 </resources>
