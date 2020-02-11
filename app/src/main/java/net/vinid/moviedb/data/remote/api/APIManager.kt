@@ -1,17 +1,15 @@
 package net.vinid.moviedb.data.remote.api
 
-import okhttp3.Interceptor
+import net.vinid.moviedb.util.AppUtils
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-object APIClient {
+object APIManager {
     private var retrofit: Retrofit? = null
     private const val REQUEST_TIMEOUT = 10
     private var okHttpClient: OkHttpClient? = null
@@ -20,7 +18,7 @@ object APIClient {
         if (okHttpClient == null) initOkHttp()
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
-                .baseUrl(APISetting.BASE_URL)
+                .baseUrl(AppUtils.BASE_MOVIE_URL)
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -41,8 +39,8 @@ object APIClient {
             val original: Request = chain.request()
             val originalUrl =original.url()
             val url =originalUrl.newBuilder()
-                .addQueryParameter("api_key",
-                    APISetting.TMDB_API_KEY
+                .addQueryParameter(AppUtils.QUERY_API_KEY,
+                    AppUtils.TMDB_API_KEY
                 )
                 .build()
 

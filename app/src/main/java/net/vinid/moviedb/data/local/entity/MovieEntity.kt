@@ -5,7 +5,9 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 open class MovieEntity(
-    @PrimaryKey var id: Int = 0,
+    @PrimaryKey
+    var id: Int = 0,
+    var movieId: Int = 0,
     var posterPath: String? = null,
     var adult: Boolean = false,
     var overview: String? = null,
@@ -19,7 +21,7 @@ open class MovieEntity(
     var voteCount: Int? = null,
     var video: Boolean? = null,
     var voteAverage: Double? = null,
-    var category: Int? = null,
+    var category: String? = null,
     var isLike: Boolean = false,
     var page: Int? = null
 ) : RealmObject()
