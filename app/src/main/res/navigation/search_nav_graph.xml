@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/searchScreen"
-        android:name="net.vinid.moviedb.ui.search.SearchFragment"
+        android:name="net.vinid.moviedb.ui.search.view.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search">
     </fragment>
