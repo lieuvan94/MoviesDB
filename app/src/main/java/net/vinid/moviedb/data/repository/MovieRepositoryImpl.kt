@@ -3,9 +3,9 @@ package net.vinid.moviedb.data.repository
 import android.content.Context
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import net.vinid.moviedb.data.local.dao.MovieDAOImpl
+import net.vinid.moviedb.data.local.dao.MovieDAO
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.data.remote.api.APIServiceImpl
+import net.vinid.moviedb.data.remote.api.APIService
 import net.vinid.moviedb.data.remote.api.NetworkBoundResource
 import net.vinid.moviedb.data.remote.api.Resource
 import net.vinid.moviedb.data.remote.respone.ListMovieRespone
@@ -14,8 +14,8 @@ import net.vinid.moviedb.util.NetworkManager
 
 class MovieRepositoryImpl(
     context: Context,
-    private val localDataSource: MovieDAOImpl,
-    private val remoteDataSource: APIServiceImpl
+    private val localDataSource: MovieDAO,
+    private val remoteDataSource: APIService
 ) : MovieRepository {
     private val networkManager: NetworkManager = NetworkManager(context)
 
