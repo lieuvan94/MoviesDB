@@ -1,4 +1,4 @@
-package net.vinid.moviedb.ui.search
+package net.vinid.moviedb.ui.search.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import net.vinid.moviedb.R
-import net.vinid.moviedb.databinding.FragmentSearchBinding
+import net.vinid.moviedb.databinding.FragmentSearchByGenresBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 
 /**
- * Created by Nguyen Van Lieu on 2/1/2020.
+ * Created by Nguyen Van Lieu on 2/12/2020.
  */
-class SearchFragment : BaseFragment() {
+class SearchMoviesByGenresFragment: BaseFragment() {
 
-    private lateinit var dataBinding: FragmentSearchBinding
+    private lateinit var dataBinding: FragmentSearchByGenresBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,7 +22,7 @@ class SearchFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         dataBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_search_by_genres, container, false)
         dataBinding.lifecycleOwner = this
 
         return dataBinding.root

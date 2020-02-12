@@ -7,4 +7,6 @@
     <color name="backgroundBottomNav">#222E3C</color>
     <color name="backgroundScreen">#1A222D</color>
     <color name="overlayBackground">#af212121</color>
+    <color name="backgroundMenuBar">#222E3C</color>
+    <color name="colorGray">#B4C9F0</color>
 </resources>
