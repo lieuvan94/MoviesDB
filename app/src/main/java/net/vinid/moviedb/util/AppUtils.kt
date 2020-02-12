@@ -2,6 +2,7 @@ package net.vinid.moviedb.util
 
 
 import io.realm.RealmConfiguration
+import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.remote.respone.MovieRespone
 
@@ -22,20 +23,13 @@ object AppUtils{
     const val COLUMN_MOVIE_CATEGORY = "category"
 
     fun convertMovieResponeToMovieEntity(movieRespone: List<MovieRespone>, category: String, page: Int)
-            : ArrayList<MovieEntity> {
-        val listMovieEntity = ArrayList<MovieEntity>()
-        for (movie in movieRespone) {
-            val movieEntity = MovieEntity(
-                0,
-                movie.id, movie.posterPath, movie.adult,
-                movie.overview, movie.releaseDate, null, movie.originalTitle,
-                movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
-                movie.vote_count, movie.video, movie.vote_average, category, false, page
-            )
-            movieEntity.genreIds?.addAll(movie.genreIds)
-            listMovieEntity.add(movieEntity)
+            : List<MovieEntity> {
+        return movieRespone.map {
+            movie -> MovieEntity(0, movie.id, movie.posterPath, movie.adult, movie.overview,
+            movie.releaseDate, movie.genreIds as RealmList<Int>, movie.originalTitle,
+            movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
+            movie.vote_count, movie.video, movie.vote_average, category, false, page)
         }
-        return listMovieEntity
     }
 
     fun initRealmConfig(): RealmConfiguration {
