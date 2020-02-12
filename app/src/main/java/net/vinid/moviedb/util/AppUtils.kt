@@ -27,12 +27,12 @@ object AppUtils{
         for (movie in movieRespone) {
             val movieEntity = MovieEntity(
                 0,
-                movie.id, movie.poster_path, movie.adult,
-                movie.overview, movie.release_date, null, movie.original_title,
-                movie.original_language, movie.title, movie.backdrop_path, movie.popularity,
+                movie.id, movie.posterPath, movie.adult,
+                movie.overview, movie.releaseDate, null, movie.originalTitle,
+                movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
                 movie.vote_count, movie.video, movie.vote_average, category, false, page
             )
-            movieEntity.genreIds?.addAll(movie.genre_ids)
+            movieEntity.genreIds?.addAll(movie.genreIds)
             listMovieEntity.add(movieEntity)
         }
         return listMovieEntity
