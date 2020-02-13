@@ -1,7 +1,6 @@
 package net.vinid.moviedb.ui.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import net.vinid.moviedb.data.local.dao.MovieDAO
@@ -19,7 +18,6 @@ import net.vinid.moviedb.util.AppUtils
  * Created by Nguyen Van Lieu on 2/4/2020.
  */
 class MoviesViewModel(application: Application) : BaseViewModel(application) {
-    private val TAG = "MoviesViewModel"
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieEntity>>()
     val popularMovie: LiveData<ArrayList<MovieEntity>> get() = _popularMovie
@@ -55,7 +53,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
         localDataSource, remoteDataSource)
 
     fun requestGetMovieByPage(page: Int) {
-        Log.d(TAG,"requestGetMovieByPage")
         addToDisposable(
             movieRepository.getMovieByCategory(AppUtils.MOVIE_POPULAR, page)
                 .filter { v -> !v.data!!.isEmpty() }
@@ -63,7 +60,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
                 .subscribe({
                     _popularMovie.value = it.data!! as ArrayList<MovieEntity>
                 }, {
-                    Log.d(TAG,"requestGetMovieByPage - MOVIE_POPULAR - err"+it.message)
                     _errPopular.value = it
                 })
         )
@@ -75,7 +71,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
                 .subscribe({
                     _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
                 }, {
-                    Log.d(TAG,"requestGetMovieByPage - MOVIE_NOW_PLAYING - err"+it.message)
                     _errNowPlaying.value = it
                 })
         )
@@ -87,7 +82,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
                 .subscribe({
                     _upComing.value = it.data!! as ArrayList<MovieEntity>
                 }, {
-                    Log.d(TAG,"requestGetMovieByPage - MOVIE_UPCOMING - err"+it.message)
                     _errUpComing.value = it
                 })
         )
@@ -99,7 +93,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
                 .subscribe({
                     _topRates.value = it.data!! as ArrayList<MovieEntity>
                 }, {
-                    Log.d(TAG,"requestGetMovieByPage - MOVIE_TOP_RATES - err"+it.message)
                     _errTopRates.value = it
                 })
         )

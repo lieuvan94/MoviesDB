@@ -1,6 +1,5 @@
 package net.vinid.moviedb.data.remote.api
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.NonNull
 import androidx.annotation.WorkerThread
@@ -11,7 +10,6 @@ import io.reactivex.schedulers.Schedulers
 
 
 abstract class NetworkBoundResource<ResultType, RequestType> {
-    private val TAG = "NetworkBoundResource"
 
     // result to observe to Repos
     var result: Observable<Resource<ResultType>>
@@ -47,13 +45,11 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
 
     protected open fun onFetchFailed() {
         // Todo: Show dialog "No internet"
-        Log.d(TAG,"Fetch failed")
     }
 
     @MainThread
     protected abstract fun shouldFetch(): Boolean
 
-    @NonNull
     @MainThread
     protected abstract fun loadFromDb(): Flowable<ResultType>
 

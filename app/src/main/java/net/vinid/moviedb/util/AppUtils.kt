@@ -24,9 +24,7 @@ object AppUtils{
 
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
-        return movieResponse.map {
-            movie ->
-
+        return movieResponse.map { movie ->
             val realmListRenres = RealmList<Int>()
             realmListRenres.addAll(movie.genreIds)
 

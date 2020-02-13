@@ -1,7 +1,6 @@
 package net.vinid.moviedb.data.repository
 
 import android.content.Context
-import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import net.vinid.moviedb.data.local.dao.MovieDAO
@@ -18,15 +17,12 @@ class MovieRepositoryImpl(
     private val localDataSource: MovieDAO,
     private val remoteDataSource: APIService
 ) : MovieRepository {
-    private val TAG = "MovieRepositoryImpl"
     private val networkManager: NetworkManager = NetworkManager(context)
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
-        Log.d(TAG, "getMovieByCategory: "+category)
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
             // save data from remote to local
             override fun saveCallResult(item: ListMovieResponse) {
-                Log.d(TAG,"save "+category)
                 val listMovieEntity = AppUtils
                     .convertMovieResponeToMovieEntity(item.results, category, page)
                 localDataSource.saveListMovie(listMovieEntity, category, page)
@@ -42,7 +38,6 @@ class MovieRepositoryImpl(
             // call API
             override fun createCall(): Observable<Resource<ListMovieResponse>> {
                 // request by category
-                Log.d(TAG,"createCallAPI "+category)
                 return remoteDataSource.getMovieByCategory(category, page)
                     .flatMap { t -> Observable.just(Resource.success(t)) }
             }
@@ -56,11 +51,9 @@ class MovieRepositoryImpl(
 
             override fun shouldFetch(): Boolean {
                 // check internet
-                Log.d(TAG,"shouldFetch "+networkManager.isAvailable)
                 return networkManager.isAvailable
             }
         }.result
-
     }
 
 }

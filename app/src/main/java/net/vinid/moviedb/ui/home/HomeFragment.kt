@@ -1,13 +1,12 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
@@ -18,11 +17,9 @@ import net.vinid.moviedb.util.AppUtils
  * Created by Nguyen Van Lieu on 2/1/2020.
  */
 class HomeFragment : BaseFragment() {
-
-    private val TAG = "HomeFragment"
     private lateinit var dataBinding: FragmentHomeBinding
 
-    private lateinit var moviesViewModel: MoviesViewModel
+    private var moviesViewModel: MoviesViewModel? = null
 
 //    private val genresViewModel: GenresViewModel by lazy {
 //        ViewModelProviders.of(this).get(GenresViewModel::class.java)
@@ -52,7 +49,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun requestGetMovie() {
-        moviesViewModel.requestGetMovieByPage(1)
+        moviesViewModel?.requestGetMovieByPage(1)
     }
 
     private fun initView(){
@@ -78,50 +75,40 @@ class HomeFragment : BaseFragment() {
 
     private fun initViewModel() {
         moviesViewModel = MoviesViewModel(activity!!.application)
-        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel::class.java)
+        moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
 
-
-
-        moviesViewModel.popularMovie.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"popularMovie.observe "+it.size)
+        moviesViewModel?.popularMovie?.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, popularMovieAdapter, AppUtils.MOVIE_POPULAR)
         })
 
-        moviesViewModel.upComingMovie.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"upComingMovie.observe "+it.size)
+        moviesViewModel?.upComingMovie?.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, upComingMovieAdapter, AppUtils.MOVIE_UPCOMING)
         })
 
-        moviesViewModel.topRatesMovie.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"topRatesMovie.observe "+it.size)
+        moviesViewModel?.topRatesMovie?.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, topRateMovieAdapter, AppUtils.MOVIE_TOP_RATES)
         })
 
-        moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"nowPlayingMovie.observe "+it.size)
+        moviesViewModel?.nowPlayingMovie?.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
         })
 
 
         // handle error
-        moviesViewModel.errorPopular.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"errorPopular.observe ")
-            setVisibleNoDataTxt(View.VISIBLE, AppUtils.MOVIE_POPULAR)
+        moviesViewModel?.errorPopular?.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
         })
 
-        moviesViewModel.errUpComing.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"upComingMovie.observe ")
-            setVisibleNoDataTxt(View.VISIBLE, AppUtils.MOVIE_UPCOMING)
+        moviesViewModel?.errUpComing?.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
         })
 
-        moviesViewModel.errTopRates.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"errorTopRate.observe ")
-            setVisibleNoDataTxt(View.VISIBLE, AppUtils.MOVIE_TOP_RATES)
+        moviesViewModel?.errTopRates?.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
         })
 
-        moviesViewModel.errNowPlaying.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG,"nowPlayingMovie.observe ")
-            setVisibleNoDataTxt(View.VISIBLE, AppUtils.MOVIE_NOW_PLAYING)
+        moviesViewModel?.errNowPlaying?.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
         })
 //        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
 //            updateGenresList(it)
