@@ -9,7 +9,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object APIManager {
+object APIClient {
     private var retrofit: Retrofit? = null
     private const val REQUEST_TIMEOUT = 10
     private var okHttpClient: OkHttpClient? = null

@@ -18,23 +18,21 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
 
     init {
         if (this.shouldFetch()){
-            result = this.loadFromDb()?.toObservable()?.map{ t -> Resource.success(t) }!!.concatWith(
+            result = this.loadFromDb().toObservable().map{ t -> Resource.success(t) }.concatWith(
                 this.createCall()
                     .doOnNext {
-                        // delete movie existed
-                        deleteMovieByPageAndCategory()
                         // save remote data to db
                         saveCallResult(processResponse(it))
                     }
+                    .distinct()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { convertRequestTypeToResultType(it) }
             )
         }
         else {
-            result = this.loadFromDb()?.toObservable()?.map{ t -> Resource.success(t) }!!
+            result = this.loadFromDb().toObservable()?.map{ t -> Resource.success(t) }!!
         }
-
     }
 
     protected abstract fun convertRequestTypeToResultType(requestType: Resource<RequestType>): Resource<ResultType>
@@ -47,9 +45,6 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
     @WorkerThread
     protected abstract fun saveCallResult(@NonNull item: RequestType)
 
-    @WorkerThread
-    protected abstract fun deleteMovieByPageAndCategory()
-
     protected open fun onFetchFailed() {
         // Todo: Show dialog "No internet"
         Log.d(TAG,"Fetch failed")
@@ -60,7 +55,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @NonNull
     @MainThread
-    protected abstract fun loadFromDb(): Flowable<ResultType>?
+    protected abstract fun loadFromDb(): Flowable<ResultType>
 
     @NonNull
     @MainThread

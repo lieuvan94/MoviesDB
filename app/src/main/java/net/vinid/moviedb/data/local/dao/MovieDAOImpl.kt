@@ -14,27 +14,29 @@ class MovieDAOImpl : MovieDAO {
             .equalTo(AppUtils.COLUMN_PAGE, page)
             .equalTo(AppUtils.COLUMN_MOVIE_CATEGORY, category)
             .findAll()
+        Log.d(TAG,"`getMoviesByPageAndCategory: "+category)
+        for (item in realmResult){
+            Log.d(TAG,"get item: "+item.title+", cate: "+category)
+        }
         if (!realmResult.isNullOrEmpty()) {
             listMovie.addAll(realmResult)
         }
         return listMovie
     }
 
-    override fun deleteMovieByPageAndCategory(page: Int, category: String) {
-        Realm.getInstance(AppUtils.initRealmConfig()).executeTransactionAsync { realm ->
-            val result = realm.where(MovieEntity::class.java)
-                .equalTo(AppUtils.COLUMN_PAGE, page)
-                .equalTo(AppUtils.COLUMN_MOVIE_CATEGORY, category)
-                .findAll()
-            if (!result.isNullOrEmpty()){
-                result.deleteAllFromRealm()
-            }
-        }
-    }
-
-    override fun saveListMovie(listMovie: List<MovieEntity>) {
+    override fun saveListMovie(listMovie: List<MovieEntity>, category: String, page: Int) {
         Realm.getInstance(AppUtils.initRealmConfig())
             .executeTransactionAsync { realm ->
+                // delete current list follow category and page before save
+                val result = realm.where(MovieEntity::class.java)
+                    .equalTo(AppUtils.COLUMN_PAGE, page)
+                    .equalTo(AppUtils.COLUMN_MOVIE_CATEGORY, category)
+                    .findAll()
+                if (!result.isNullOrEmpty()){
+                    Log.d(TAG,"`deleteMovieByPageAndCategory: "+category+", delete: "+result.size)
+                    result.deleteAllFromRealm()
+                }
+
                 for (movie in listMovie){
                     // save movie to db
                     val currentIdNumber = realm.where(MovieEntity::class.java).max("id")

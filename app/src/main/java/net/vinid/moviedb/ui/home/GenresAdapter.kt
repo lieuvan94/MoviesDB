@@ -41,10 +41,10 @@ class GenresAdapter : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
         }
     }
 
-    fun setItems(genress: List<GenresItem>) {
+    fun setItems(genres: List<GenresItem>) {
         val startPosition = this.dataList.size
-        this.dataList.addAll(genress)
-        notifyItemRangeChanged(startPosition, genress.size)
+        this.dataList.addAll(genres)
+        notifyItemRangeChanged(startPosition, genres.size)
     }
 
 
