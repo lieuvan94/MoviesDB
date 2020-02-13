@@ -1,6 +1,5 @@
 package net.vinid.moviedb.data.repository
 
-import android.content.Context
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import net.vinid.moviedb.data.local.dao.MovieDAO
@@ -13,11 +12,10 @@ import net.vinid.moviedb.util.AppUtils
 import net.vinid.moviedb.util.NetworkManager
 
 class MovieRepositoryImpl(
-    context: Context,
     private val localDataSource: MovieDAO,
-    private val remoteDataSource: APIService
+    private val remoteDataSource: APIService,
+    private val networkManager: NetworkManager
 ) : MovieRepository {
-    private val networkManager: NetworkManager = NetworkManager(context)
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){

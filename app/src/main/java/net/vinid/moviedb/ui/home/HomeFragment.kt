@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
+import net.vinid.moviedb.ui.ViewModelFactory
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.util.AppUtils
 
@@ -19,7 +20,8 @@ import net.vinid.moviedb.util.AppUtils
 class HomeFragment : BaseFragment() {
     private lateinit var dataBinding: FragmentHomeBinding
 
-    private var moviesViewModel: MoviesViewModel? = null
+    private var moviesViewModel
+        = ViewModelFactory(MovieApplication.injectMovieRepository()).create(MoviesViewModel::class.java)
 
 //    private val genresViewModel: GenresViewModel by lazy {
 //        ViewModelProviders.of(this).get(GenresViewModel::class.java)
@@ -49,7 +51,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun requestGetMovie() {
-        moviesViewModel?.requestGetMovieByPage(1)
+        moviesViewModel.requestGetMovieByPage(1)
     }
 
     private fun initView(){
@@ -74,40 +76,37 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        moviesViewModel = MoviesViewModel(activity!!.application)
-        moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
-
-        moviesViewModel?.popularMovie?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.popularMovie.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, popularMovieAdapter, AppUtils.MOVIE_POPULAR)
         })
 
-        moviesViewModel?.upComingMovie?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.upComingMovie.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, upComingMovieAdapter, AppUtils.MOVIE_UPCOMING)
         })
 
-        moviesViewModel?.topRatesMovie?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.topRatesMovie.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, topRateMovieAdapter, AppUtils.MOVIE_TOP_RATES)
         })
 
-        moviesViewModel?.nowPlayingMovie?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
             updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
         })
 
 
         // handle error
-        moviesViewModel?.errorPopular?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.errorPopular.observe(viewLifecycleOwner, Observer {
             //Todo Show dialog display error
         })
 
-        moviesViewModel?.errUpComing?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.errUpComing.observe(viewLifecycleOwner, Observer {
             //Todo Show dialog display error
         })
 
-        moviesViewModel?.errTopRates?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.errTopRates.observe(viewLifecycleOwner, Observer {
             //Todo Show dialog display error
         })
 
-        moviesViewModel?.errNowPlaying?.observe(viewLifecycleOwner, Observer {
+        moviesViewModel.errNowPlaying.observe(viewLifecycleOwner, Observer {
             //Todo Show dialog display error
         })
 //        genresViewModel.genres.observe(viewLifecycleOwner, Observer {

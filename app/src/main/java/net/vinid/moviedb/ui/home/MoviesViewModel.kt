@@ -1,23 +1,16 @@
 package net.vinid.moviedb.ui.home
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import net.vinid.moviedb.data.local.dao.MovieDAO
-import net.vinid.moviedb.data.local.dao.MovieDAOImpl
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.data.remote.api.APIClient
-import net.vinid.moviedb.data.remote.api.APIService
-import net.vinid.moviedb.data.remote.api.APIServiceImpl
 import net.vinid.moviedb.data.repository.MovieRepository
-import net.vinid.moviedb.data.repository.MovieRepositoryImpl
 import net.vinid.moviedb.ui.base.BaseViewModel
 import net.vinid.moviedb.util.AppUtils
 
 /**
  * Created by Nguyen Van Lieu on 2/4/2020.
  */
-class MoviesViewModel(application: Application) : BaseViewModel(application) {
+class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewModel() {
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieEntity>>()
     val popularMovie: LiveData<ArrayList<MovieEntity>> get() = _popularMovie
@@ -42,15 +35,6 @@ class MoviesViewModel(application: Application) : BaseViewModel(application) {
 
     private val _errUpComing = MutableLiveData<Throwable>()
     val errUpComing: LiveData<Throwable> get() = _errUpComing
-
-
-
-    private val localDataSource: MovieDAO = MovieDAOImpl()
-    private val remoteDataSource: APIService = APIServiceImpl(APIClient.getClient()!!
-        .create(APIService::class.java))
-
-    private val movieRepository: MovieRepository = MovieRepositoryImpl(application.applicationContext,
-        localDataSource, remoteDataSource)
 
     fun requestGetMovieByPage(page: Int) {
         addToDisposable(
