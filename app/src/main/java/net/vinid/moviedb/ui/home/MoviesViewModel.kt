@@ -2,6 +2,7 @@ package net.vinid.moviedb.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
@@ -14,15 +15,27 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieEntity>>()
     val popularMovie: LiveData<ArrayList<MovieEntity>> get() = _popularMovie
+    val popularMovieVisible = Transformations.map(_popularMovie){
+        it.isNotEmpty()
+    }
 
     private val _nowPlayingMovie = MutableLiveData<ArrayList<MovieEntity>>()
     val nowPlayingMovie: LiveData<ArrayList<MovieEntity>> get() = _nowPlayingMovie
+    val nowPlayingMovieVisible = Transformations.map(_nowPlayingMovie) {
+        it.isNotEmpty()
+    }
 
     private val _topRates = MutableLiveData<ArrayList<MovieEntity>>()
     val topRatesMovie: LiveData<ArrayList<MovieEntity>> get() = _topRates
+    val topRatesMovieVisible = Transformations.map(_topRates) {
+        it.isNotEmpty()
+    }
 
     private val _upComing = MutableLiveData<ArrayList<MovieEntity>>()
     val upComingMovie: LiveData<ArrayList<MovieEntity>> get() = _upComing
+    val upComingMovieVisible = Transformations.map(_upComing) {
+        it.isNotEmpty()
+    }
 
     private val _errPopular = MutableLiveData<Throwable>()
     val errorPopular: LiveData<Throwable> get() = _errPopular

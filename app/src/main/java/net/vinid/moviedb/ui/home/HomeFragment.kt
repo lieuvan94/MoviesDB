@@ -45,6 +45,7 @@ class HomeFragment : BaseFragment() {
         dataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
+        dataBinding.viewModel = moviesViewModel
 
         initView()
         initViewModel()
@@ -58,11 +59,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initView(){
-        dataBinding.includedTopRateMovieLayout.title = R.string.top_rates_movies_label
-        dataBinding.includedPopularMovieLayout.title = R.string.popular_movies_label
-        dataBinding.includedNowPlayingMovieLayout.title = R.string.now_playing_movies_label
-        dataBinding.includedUpComingMovieLayout.title = R.string.upcoming_movies_label
-
         popularMovieAdapter = MoviesAdapter()
         upComingMovieAdapter = MoviesAdapter()
         nowPlayingMovieAdapter = MoviesAdapter()
@@ -117,32 +113,9 @@ class HomeFragment : BaseFragment() {
 //        })
     }
 
-    private fun setVisibleNoDataTxt(visible: Int, category: String){
-        when (category){
-            AppUtils.MOVIE_TOP_RATES -> {
-                dataBinding.includedTopRateMovieLayout.noDataTextView.visibility = visible
-            }
-
-            AppUtils.MOVIE_UPCOMING -> {
-                dataBinding.includedUpComingMovieLayout.noDataTextView.visibility = visible
-            }
-
-            AppUtils.MOVIE_NOW_PLAYING -> {
-                dataBinding.includedNowPlayingMovieLayout.noDataTextView.visibility = visible
-            }
-
-            AppUtils.MOVIE_POPULAR -> {
-                dataBinding.includedPopularMovieLayout.noDataTextView.visibility = visible
-            }
-        }
-    }
 
     private fun updateMoviesList(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter, category: String) {
-        if (!movies.isNullOrEmpty()) {
-            adapter.setItems(movies)
-            setVisibleNoDataTxt(View.GONE, category)
-        } else
-            setVisibleNoDataTxt(View.VISIBLE, category)
+        adapter.setItems(movies)
     }
 
     private fun updateGenresList(genres: List<GenresItem>) {
