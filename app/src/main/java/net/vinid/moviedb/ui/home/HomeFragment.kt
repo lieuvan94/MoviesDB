@@ -58,10 +58,10 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initView(){
-        dataBinding.includedPopularMovieLayout.movieCategoryTitle.setText(R.string.popular_movies_label)
-        dataBinding.includedNowPlayingMovieLayout.movieCategoryTitle.setText(R.string.now_playing_movies_label)
-        dataBinding.includedUpComingMovieLayout.movieCategoryTitle.setText(R.string.upcoming_movies_label)
-        dataBinding.includedTopRateMovieLayout.movieCategoryTitle.setText(R.string.top_rates_movies_label)
+        dataBinding.includedTopRateMovieLayout.title = R.string.top_rates_movies_label
+        dataBinding.includedPopularMovieLayout.title = R.string.popular_movies_label
+        dataBinding.includedNowPlayingMovieLayout.title = R.string.now_playing_movies_label
+        dataBinding.includedUpComingMovieLayout.title = R.string.upcoming_movies_label
 
         popularMovieAdapter = MoviesAdapter()
         upComingMovieAdapter = MoviesAdapter()

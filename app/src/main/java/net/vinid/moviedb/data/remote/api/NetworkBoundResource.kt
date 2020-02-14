@@ -11,12 +11,9 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class NetworkBoundResource<ResultType, RequestType> {
 
-    // result to observe to Repos
-    var result: Observable<Resource<ResultType>>
-
-    init {
-        if (this.shouldFetch()){
-            result = this.loadFromDb().toObservable().map{ t -> Resource.success(t) }.concatWith(
+    fun getResource(): Observable<Resource<ResultType>> {
+        return if (this.shouldFetch()) {
+            loadFromDb().toObservable().map { t -> Resource.success(t) }.concatWith(
                 this.createCall()
                     .doOnNext {
                         // save remote data to db
@@ -27,9 +24,8 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { convertRequestTypeToResultType(it) }
             )
-        }
-        else {
-            result = this.loadFromDb().toObservable()?.map{ t -> Resource.success(t) }!!
+        } else {
+            loadFromDb().toObservable()?.map { t -> Resource.success(t) }!!
         }
     }
 

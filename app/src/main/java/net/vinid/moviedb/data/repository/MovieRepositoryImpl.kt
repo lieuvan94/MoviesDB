@@ -51,7 +51,7 @@ class MovieRepositoryImpl(
                 // check internet
                 return networkManager.isAvailable
             }
-        }.result
+        }.getResource()
     }
 
 }
