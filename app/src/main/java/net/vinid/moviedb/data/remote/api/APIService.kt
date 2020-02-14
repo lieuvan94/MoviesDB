@@ -10,4 +10,10 @@ interface APIService {
     @GET("movie/{category}")
     fun getMovieByCategory(@Path("category") category: String,@Query("page") page: Int)
             : Observable<ListMovieRespone>
+
+    @GET("/search/movie")
+    fun searchMoviesByQuery(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): Observable<ListMovieRespone>
 }

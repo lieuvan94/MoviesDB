@@ -21,6 +21,8 @@ object AppUtils{
     private const val DB_NAME = "moviedb.realm"
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
+    const val COLUMN_MOVIE_TITLE = "title"
+    const val COLUMN_RECYCLEVIEW = 3
 
     fun convertMovieResponeToMovieEntity(movieRespone: List<MovieRespone>, category: String, page: Int)
             : List<MovieEntity> {
@@ -31,6 +33,16 @@ object AppUtils{
             movie.vote_count, movie.video, movie.vote_average, category, false, page)
         }
     }
+
+    fun convertMovieEntityToMovieRespone(movieEntity: List<MovieEntity>)
+            : List<MovieRespone> {
+        return movieEntity.map {
+                movie -> MovieRespone(movie.posterPath!!,movie.adult, movie.overview!!, movie.releaseDate!!,
+            movie.genreIds as List<Int>,movie.id,movie.originalTitle!!,movie.originalLanguage!!,movie.originalTitle!!,
+            movie.backdropPath!!,movie.popularity!!,movie.voteCount!!,movie.video!!,movie.voteAverage!!)
+        }
+    }
+
 
     fun initRealmConfig(): RealmConfiguration {
         return RealmConfiguration.Builder()
