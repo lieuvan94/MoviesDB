@@ -40,4 +40,31 @@ class MovieDAOImpl : MovieDAO {
                 }
             }
     }
+
+    override fun getMoviesByPage(page: Int): List<MovieEntity> {
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .equalTo(AppUtils.COLUMN_PAGE, page)
+            .findAll()
+        if (!realmResult.isNullOrEmpty()) {
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
+    }
+
+    override fun searchMoviesByQuery(query: String): List<MovieEntity> {
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .contains(AppUtils.COLUMN_MOVIE_TITLE, query)
+            .findAll()
+            .distinctBy {
+                it.title
+            }
+        if (!realmResult.isNullOrEmpty()){
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
+    }
 }

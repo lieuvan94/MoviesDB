@@ -54,4 +54,15 @@ class MovieRepositoryImpl(
         }.getResource()
     }
 
+    override fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>> {
+        return if(networkManager.isAvailable) {
+            remoteDataSource.searchMoviesByQuery(query,page)
+                .map {
+                    AppUtils.convertMovieResponeToMovieEntity(it.results)
+                }
+        }else{
+            Observable.just(localDataSource.searchMoviesByQuery(query))
+        }
+    }
+
 }
