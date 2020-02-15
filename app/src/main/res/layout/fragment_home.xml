@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.vinid.moviedb.ui.home.HomeFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="net.vinid.moviedb.ui.home.MoviesViewModel" />
+    </data>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,6 +19,8 @@
             android:background="@color/backgroundScreen">
 
             <include
+                app:title="@{@string/popular_movies_label}"
+                app:isVisible ="@{viewModel.popularMovieVisible}"
                 android:id="@+id/includedPopularMovieLayout"
                 layout="@layout/view_category_movies_list"
                 android:layout_width="0dp"
@@ -24,6 +31,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
+                app:title="@{@string/now_playing_movies_label}"
+                app:isVisible="@{viewModel.nowPlayingMovieVisible}"
                 android:id="@+id/includedNowPlayingMovieLayout"
                 layout="@layout/view_category_movies_list"
                 android:layout_width="0dp"
@@ -34,6 +43,8 @@
                 app:layout_constraintTop_toBottomOf="@id/includedPopularMovieLayout" />
 
             <include
+                app:title="@{@string/upcoming_movies_label}"
+                app:isVisible="@{viewModel.upComingMovieVisible}"
                 android:id="@+id/includedUpComingMovieLayout"
                 layout="@layout/view_category_movies_list"
                 android:layout_width="0dp"
@@ -44,6 +55,8 @@
                 app:layout_constraintTop_toBottomOf="@id/includedNowPlayingMovieLayout" />
 
             <include
+                app:title="@{@string/top_rates_movies_label}"
+                app:isVisible="@{viewModel.topRatesMovieVisible}"
                 android:id="@+id/includedTopRateMovieLayout"
                 layout="@layout/view_category_movies_list"
                 android:layout_width="0dp"

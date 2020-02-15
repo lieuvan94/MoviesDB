@@ -2,7 +2,7 @@ package net.vinid.moviedb.data.remote.respone
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieRespone (
+data class MovieResponse (
     @SerializedName("poster_path") val posterPath : String,
     @SerializedName("adult") val adult : Boolean,
     @SerializedName("overview") val overview : String,

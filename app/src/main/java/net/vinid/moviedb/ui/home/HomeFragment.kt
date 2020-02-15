@@ -6,28 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.ViewModelProvider
+import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
+import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
+import net.vinid.moviedb.util.AppUtils
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
  */
 class HomeFragment : BaseFragment() {
-
     private lateinit var dataBinding: FragmentHomeBinding
 
-    private val moviesViewModel: MoviesViewModel by lazy {
-        ViewModelProviders.of(this).get(MoviesViewModel::class.java)
-    }
-    private val genresViewModel: GenresViewModel by lazy {
-        ViewModelProviders.of(this).get(GenresViewModel::class.java)
+    private val viewModelFactory = MovieApplication.injectViewModelFactory()
+
+    private val moviesViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
     }
 
-    private lateinit var moviesAdapter: MoviesAdapter
+//    private val genresViewModel: GenresViewModel by lazy {
+//        ViewModelProviders.of(this).get(GenresViewModel::class.java)
+//    }
+
+    private lateinit var popularMovieAdapter: MoviesAdapter
+    private lateinit var upComingMovieAdapter: MoviesAdapter
+    private lateinit var topRateMovieAdapter: MoviesAdapter
+    private lateinit var nowPlayingMovieAdapter: MoviesAdapter
+
     private lateinit var genresAdapter: GenresAdapter
 
     override fun onCreateView(
@@ -38,25 +45,29 @@ class HomeFragment : BaseFragment() {
         dataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
+        dataBinding.viewModel = moviesViewModel
 
         initView()
         initViewModel()
+        requestGetMovie()
 
         return dataBinding.root
     }
 
+    private fun requestGetMovie() {
+        moviesViewModel.requestGetMovieByPage(1)
+    }
+
     private fun initView(){
-        dataBinding.includedPopularMovieLayout.movieCategoryTitle.setText(R.string.popular_movies_label)
-        dataBinding.includedNowPlayingMovieLayout.movieCategoryTitle.setText(R.string.now_playing_movies_label)
-        dataBinding.includedUpComingMovieLayout.movieCategoryTitle.setText(R.string.upcoming_movies_label)
-        dataBinding.includedTopRateMovieLayout.movieCategoryTitle.setText(R.string.top_rates_movies_label)
+        popularMovieAdapter = MoviesAdapter()
+        upComingMovieAdapter = MoviesAdapter()
+        nowPlayingMovieAdapter = MoviesAdapter()
+        topRateMovieAdapter = MoviesAdapter()
 
-        moviesAdapter = MoviesAdapter()
-
-        dataBinding.includedPopularMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.moviesAdapter
-        dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.moviesAdapter
-        dataBinding.includedUpComingMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.moviesAdapter
-        dataBinding.includedTopRateMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.moviesAdapter
+        dataBinding.includedPopularMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.popularMovieAdapter
+        dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.nowPlayingMovieAdapter
+        dataBinding.includedUpComingMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.upComingMovieAdapter
+        dataBinding.includedTopRateMovieLayout.moviesRecyclerView.adapter = this@HomeFragment.topRateMovieAdapter
 
         genresAdapter = GenresAdapter()
         dataBinding.genresRecyclerView.adapter = this@HomeFragment.genresAdapter
@@ -64,20 +75,51 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        moviesViewModel.movies.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it)
+        moviesViewModel.popularMovie.observe(viewLifecycleOwner, Observer {
+            updateMoviesList(it, popularMovieAdapter, AppUtils.MOVIE_POPULAR)
         })
 
-        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
-            updateGenresList(it)
+        moviesViewModel.upComingMovie.observe(viewLifecycleOwner, Observer {
+            updateMoviesList(it, upComingMovieAdapter, AppUtils.MOVIE_UPCOMING)
         })
+
+        moviesViewModel.topRatesMovie.observe(viewLifecycleOwner, Observer {
+            updateMoviesList(it, topRateMovieAdapter, AppUtils.MOVIE_TOP_RATES)
+        })
+
+        moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
+            updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
+        })
+
+
+        // handle error
+        moviesViewModel.errorPopular.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
+        })
+
+        moviesViewModel.errUpComing.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
+        })
+
+        moviesViewModel.errTopRates.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
+        })
+
+        moviesViewModel.errNowPlaying.observe(viewLifecycleOwner, Observer {
+            //Todo Show dialog display error
+        })
+//        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
+//            updateGenresList(it)
+//        })
     }
 
-    private fun updateMoviesList(movies: List<MoviesItem>) {
-        moviesAdapter.setItems(movies)
+
+    private fun updateMoviesList(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter, category: String) {
+        adapter.setItems(movies)
     }
-    private fun updateGenresList(genress: List<GenresItem>) {
-        genresAdapter.setItems(genress)
+
+    private fun updateGenresList(genres: List<GenresItem>) {
+        genresAdapter.setItems(genres)
     }
 }
 

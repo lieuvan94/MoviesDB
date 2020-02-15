@@ -4,7 +4,7 @@ package net.vinid.moviedb.util
 import io.realm.RealmConfiguration
 import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.data.remote.respone.MovieRespone
+import net.vinid.moviedb.data.remote.respone.MovieResponse
 
 object AppUtils{
 
@@ -22,11 +22,14 @@ object AppUtils{
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
 
-    fun convertMovieResponeToMovieEntity(movieRespone: List<MovieRespone>, category: String, page: Int)
+    fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
-        return movieRespone.map {
-            movie -> MovieEntity(0, movie.id, movie.posterPath, movie.adult, movie.overview,
-            movie.releaseDate, movie.genreIds as RealmList<Int>, movie.originalTitle,
+        return movieResponse.map { movie ->
+            val realmListRenres = RealmList<Int>()
+            realmListRenres.addAll(movie.genreIds)
+
+            MovieEntity(0, movie.id, movie.posterPath, movie.adult, movie.overview,
+            movie.releaseDate, realmListRenres, movie.originalTitle,
             movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
             movie.vote_count, movie.video, movie.vote_average, category, false, page)
         }

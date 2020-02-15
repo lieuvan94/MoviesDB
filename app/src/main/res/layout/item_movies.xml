@@ -9,7 +9,7 @@
 
         <variable
             name="data"
-            type="net.vinid.moviedb.ui.home.MoviesItem" />
+            type="net.vinid.moviedb.data.local.entity.MovieEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,10 +56,6 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     android:layout_marginEnd="@dimen/margin_8dp"
                     android:layout_marginRight="@dimen/margin_8dp"
-                    android:onClick="@{()->data.changeFavoriteStatus()}"
-                    android:src="@drawable/ic_favorite_border_white_48dp"
-                    android:visibility="@{data.isFavoriteVisible() ? View.VISIBLE : View.INVISIBLE }"
-                    app:isFavorite="@{data.favoriteStatus ?? false}"
                     app:layout_constraintDimensionRatio="W,1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.928"

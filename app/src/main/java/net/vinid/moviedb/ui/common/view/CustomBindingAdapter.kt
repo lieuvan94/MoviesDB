@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import net.vinid.moviedb.R
+import net.vinid.moviedb.util.AppUtils
 
 object CustomBindingAdapter {
 
@@ -12,7 +13,7 @@ object CustomBindingAdapter {
     fun imageUrl(imageView: ImageView, url: String?) {
         if (!url.isNullOrEmpty()) {
             Glide.with(imageView.context)
-                .load(url)
+                .load(AppUtils.IMAGE_URL + url)
                 .fitCenter()
                 .into(imageView)
         }

@@ -1,6 +1,5 @@
 package net.vinid.moviedb.data.remote.api
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.NonNull
 import androidx.annotation.WorkerThread
@@ -11,30 +10,23 @@ import io.reactivex.schedulers.Schedulers
 
 
 abstract class NetworkBoundResource<ResultType, RequestType> {
-    private val TAG = "NetworkBoundResource"
 
-    // result to observe to Repos
-    var result: Observable<Resource<ResultType>>
-
-    init {
-        if (this.shouldFetch()){
-            result = this.loadFromDb()?.toObservable()?.map{ t -> Resource.success(t) }!!.concatWith(
+    fun getResource(): Observable<Resource<ResultType>> {
+        return if (this.shouldFetch()) {
+            loadFromDb().toObservable().map { t -> Resource.success(t) }.concatWith(
                 this.createCall()
                     .doOnNext {
-                        // delete movie existed
-                        deleteMovieByPageAndCategory()
                         // save remote data to db
                         saveCallResult(processResponse(it))
                     }
+                    .distinct()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { convertRequestTypeToResultType(it) }
             )
+        } else {
+            loadFromDb().toObservable()?.map { t -> Resource.success(t) }!!
         }
-        else {
-            result = this.loadFromDb()?.toObservable()?.map{ t -> Resource.success(t) }!!
-        }
-
     }
 
     protected abstract fun convertRequestTypeToResultType(requestType: Resource<RequestType>): Resource<ResultType>
@@ -47,20 +39,15 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
     @WorkerThread
     protected abstract fun saveCallResult(@NonNull item: RequestType)
 
-    @WorkerThread
-    protected abstract fun deleteMovieByPageAndCategory()
-
     protected open fun onFetchFailed() {
         // Todo: Show dialog "No internet"
-        Log.d(TAG,"Fetch failed")
     }
 
     @MainThread
     protected abstract fun shouldFetch(): Boolean
 
-    @NonNull
     @MainThread
-    protected abstract fun loadFromDb(): Flowable<ResultType>?
+    protected abstract fun loadFromDb(): Flowable<ResultType>
 
     @NonNull
     @MainThread
