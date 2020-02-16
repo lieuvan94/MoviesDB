@@ -3,7 +3,6 @@ package net.vinid.moviedb.ui.search
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import net.vinid.moviedb.ui.home.HomeFragment
 import net.vinid.moviedb.ui.search.view.SearchByMoviesNameFragment
 import net.vinid.moviedb.ui.search.view.SearchMoviesByCategoryFragment
 import net.vinid.moviedb.ui.search.view.SearchMoviesByGenresFragment
