@@ -28,8 +28,10 @@ class SearchMoviesViewModel(private val movieRepository: MovieRepository) : Base
         movieRepository.searchMoviesByQuery(query,page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{
+            .subscribe({
                 _searchMovies.postValue(it)
-            }
+            }, {
+
+            })
     }
 }

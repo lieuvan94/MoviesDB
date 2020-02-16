@@ -138,7 +138,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun updateListMovie(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter) {
-        adapter.setItems(movies)
+        adapter.setItems(movies, LinearLayoutManager(activity?.applicationContext))
     }
 
 //    private fun updateGenresList(genres: List<GenresItem>) {

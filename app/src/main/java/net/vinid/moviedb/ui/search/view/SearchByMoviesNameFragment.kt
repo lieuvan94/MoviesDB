@@ -70,7 +70,7 @@ class SearchByMoviesNameFragment : BaseFragment() {
         })
     }
     private fun updateMoviesList(movies: List<MovieEntity>) {
-        searchMoviesAdapter.setItems(movies)
+        searchMoviesAdapter.setItems(movies, GridLayoutManager(context, AppUtils.COLUMN_RECYCLEVIEW))
     }
 
 }

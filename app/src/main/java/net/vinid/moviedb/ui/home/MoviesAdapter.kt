@@ -1,13 +1,18 @@
 package net.vinid.moviedb.ui.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.ui.common.recycleview.MovieDiffCallback
 
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
@@ -42,10 +47,20 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         }
     }
 
-    fun setItems(newListMovie: List<MovieEntity>) {
-        val lastIndex = dataList.size
-        dataList.addAll(newListMovie)
-        notifyItemInserted(lastIndex)
+    fun setItems(newListMovie: List<MovieEntity>, layoutManager: RecyclerView.LayoutManager) {
+        if (layoutManager is GridLayoutManager) {
+            Log.d("TEST", "Adapter, set girdlayout")
+            val diffUtil = DiffUtil.calculateDiff(MovieDiffCallback(dataList, newListMovie))
+            this.dataList.clear()
+            dataList.addAll(newListMovie)
+            diffUtil.dispatchUpdatesTo(this)
+        } else
+            if (layoutManager is LinearLayoutManager) {
+                Log.d("TEST", "Adapter, set linear")
+                val lastIndex = dataList.size
+                dataList.addAll(newListMovie)
+                notifyItemInserted(lastIndex)
+            }
     }
 
 
