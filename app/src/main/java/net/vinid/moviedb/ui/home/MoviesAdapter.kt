@@ -13,8 +13,8 @@ import net.vinid.moviedb.data.local.entity.MovieEntity
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
+    private var dataList: ArrayList<MovieEntity> = ArrayList()
 
-    private var dataList: List<MovieEntity> = ArrayList()
     var onItemClick: (moviesItem: MovieEntity) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
@@ -42,9 +42,10 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         }
     }
 
-    fun setItems(movies: List<MovieEntity>) {
-        dataList = movies
-        notifyDataSetChanged()
+    fun setItems(newListMovie: List<MovieEntity>) {
+        val lastIndex = dataList.size
+        dataList.addAll(newListMovie)
+        notifyItemInserted(lastIndex)
     }
 
 

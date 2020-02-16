@@ -1,11 +1,17 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.view_category_movies_list.view.*
 import androidx.lifecycle.ViewModelProvider
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
@@ -37,6 +43,13 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var genresAdapter: GenresAdapter
 
+    private val firstPage = 1
+
+    private var popularListState: Int = 0
+    private var upComingListState: Int = 0
+    private var topRateListState: Int = 0
+    private var nowPlayingListState: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,17 +58,46 @@ class HomeFragment : BaseFragment() {
         dataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
-        dataBinding.viewModel = moviesViewModel
 
         initView()
         initViewModel()
-        requestGetMovie()
 
         return dataBinding.root
     }
 
-    private fun requestGetMovie() {
-        moviesViewModel.requestGetMovieByPage(1)
+    override fun onPause() {
+        super.onPause()
+        saveListSate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getListState()
+    }
+
+    private fun requestGetMovie(category: String, page: Int) {
+        moviesViewModel.requestGetMovieByPage(category, page)
+    }
+
+    private fun initLoadMore(recyclerView: RecyclerView
+                             , linearLayoutManager: LinearLayoutManager, category: String){
+        // first load data
+        requestGetMovie(category, firstPage)
+
+        val scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            override fun setLastPosition(view: RecyclerView) {
+                view.scrollToPosition(recyclerView.adapter?.itemCount!!)
+            }
+
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?
+            ) {
+                Handler().postDelayed({
+                    requestGetMovie(category, page)
+                }, AppUtils.TIME_WAIT_LOAD_DATA)
+            }
+        }
+
+        recyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun initView(){
@@ -91,28 +133,22 @@ class HomeFragment : BaseFragment() {
             updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
         })
 
+        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView,
+            dataBinding.includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
+            AppUtils.MOVIE_POPULAR)
 
-        // handle error
-        moviesViewModel.errorPopular.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
+        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView,
+            dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
+            AppUtils.MOVIE_NOW_PLAYING)
 
-        moviesViewModel.errUpComing.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
+        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView,
+            dataBinding.includedUpComingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
+            AppUtils.MOVIE_UPCOMING)
 
-        moviesViewModel.errTopRates.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
-
-        moviesViewModel.errNowPlaying.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
-//        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
-//            updateGenresList(it)
-//        })
+        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView,
+            dataBinding.includedTopRateMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
+            AppUtils.MOVIE_TOP_RATES)
     }
-
 
     private fun updateMoviesList(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter, category: String) {
         adapter.setItems(movies)
@@ -120,6 +156,24 @@ class HomeFragment : BaseFragment() {
 
     private fun updateGenresList(genres: List<GenresItem>) {
         genresAdapter.setItems(genres)
+    }
+
+    private fun saveListSate(){
+        popularListState = (includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        upComingListState = (includedUpComingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        topRateListState = (includedTopRateMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        nowPlayingListState = (includedNowPlayingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+    }
+
+    private fun getListState(){
+        dataBinding.includedPopularMovieLayout.moviesRecyclerView.scrollToPosition(popularListState)
+        dataBinding.includedUpComingMovieLayout.moviesRecyclerView.scrollToPosition(upComingListState)
+        dataBinding.includedTopRateMovieLayout.moviesRecyclerView.scrollToPosition(topRateListState)
+        dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.scrollToPosition(nowPlayingListState)
     }
 }
 

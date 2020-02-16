@@ -22,13 +22,17 @@ object AppUtils{
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
 
+    const val TIME_WAIT_LOAD_DATA = 1500L
+
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
-        return movieResponse.map { movie ->
+        return movieResponse.map {
+            movie ->
+
             val realmListRenres = RealmList<Int>()
             realmListRenres.addAll(movie.genreIds)
 
-            MovieEntity(0, movie.id, movie.posterPath, movie.adult, movie.overview,
+            MovieEntity(movie.id.toString().plus(category), movie.id, movie.posterPath, movie.adult, movie.overview,
             movie.releaseDate, realmListRenres, movie.originalTitle,
             movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
             movie.vote_count, movie.video, movie.vote_average, category, false, page)

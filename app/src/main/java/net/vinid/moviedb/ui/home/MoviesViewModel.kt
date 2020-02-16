@@ -49,49 +49,69 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     private val _errUpComing = MutableLiveData<Throwable>()
     val errUpComing: LiveData<Throwable> get() = _errUpComing
 
-    fun requestGetMovieByPage(page: Int) {
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_POPULAR, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_popularMovie.value = ArrayList()}
-                .subscribe({
-                    _popularMovie.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errPopular.value = it
-                })
-        )
 
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_NOW_PLAYING, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_nowPlayingMovie.value = ArrayList()}
-                .subscribe({
-                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errNowPlaying.value = it
-                })
-        )
 
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_UPCOMING, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_upComing.value = ArrayList()}
-                .subscribe({
-                    _upComing.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errUpComing.value = it
-                })
-        )
 
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_TOP_RATES, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_topRates.value = ArrayList()}
-                .subscribe({
-                    _topRates.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errTopRates.value = it
-                })
-        )
+
+
+    fun requestGetMovieByPage(category: String, page: Int) {
+        when (category) {
+            AppUtils.MOVIE_POPULAR -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _popularMovie.value = ArrayList() }
+                        .take(1)
+                        .subscribe({
+                            _popularMovie.value = it.data!! as ArrayList<MovieEntity>
+                        }, {
+                            _errTopRates.value = it
+                        })
+                )
+            }
+
+            AppUtils.MOVIE_TOP_RATES -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _topRates.value = ArrayList() }
+                        .take(1)
+                        .subscribe({
+                            _topRates.value = it.data!! as ArrayList<MovieEntity>
+                        }, {
+                            _errTopRates.value = it
+                        })
+
+                )
+            }
+
+            AppUtils.MOVIE_UPCOMING -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _upComing.value = ArrayList() }
+                        .take(1)
+                        .subscribe({
+                            _upComing.value = it.data!! as ArrayList<MovieEntity>
+                        }, {
+                            _errUpComing.value = it
+                        })
+                )
+            }
+
+            AppUtils.MOVIE_NOW_PLAYING -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
+                        .take(1)
+                        .subscribe({
+                            _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                        }, {
+                            _errNowPlaying.value = it
+                        })
+                )
+            }
+        }
     }
 }
