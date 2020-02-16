@@ -18,7 +18,7 @@ class MovieRepositoryImpl(
 ) : MovieRepository {
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
-        return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>() {
+        return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
             // save data from remote to local
             override fun saveCallResult(item: ListMovieResponse) {
                 val listMovieEntity = AppUtils
@@ -27,7 +27,7 @@ class MovieRepositoryImpl(
             }
 
             override fun loadFromDb(): Flowable<List<MovieEntity>> {
-                val list = localDataSource.getMoviesByPageAndCategory(page, category)
+                val list = localDataSource.getMoviesByPageAndCategory(page,category)
                 if (list.isNullOrEmpty())
                     return Flowable.empty()
                 return Flowable.fromArray(list)
@@ -53,4 +53,16 @@ class MovieRepositoryImpl(
             }
         }.getResource()
     }
+
+    override fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>> {
+        return if(networkManager.isAvailable) {
+            remoteDataSource.searchMoviesByQuery(query,page)
+                .map {
+                    AppUtils.convertMovieResponeToMovieEntity(it.results,"",0)
+                }
+        }else{
+            Observable.just(localDataSource.searchMoviesByQuery(query))
+        }
+    }
+
 }

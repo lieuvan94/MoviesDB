@@ -6,4 +6,5 @@ import net.vinid.moviedb.data.remote.api.Resource
 
 interface MovieRepository {
     fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>>
+    fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>>
 }

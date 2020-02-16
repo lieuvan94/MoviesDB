@@ -21,6 +21,8 @@ object AppUtils{
     private const val DB_NAME = "moviedb.realm"
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
+    const val COLUMN_MOVIE_TITLE = "title"
+    const val COLUMN_RECYCLEVIEW = 3
 
     const val TIME_WAIT_LOAD_DATA = 1500L
 
