@@ -10,20 +10,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object APIClient {
-    private var retrofit: Retrofit? = null
+    private lateinit var retrofit: Retrofit
     private const val REQUEST_TIMEOUT = 10
     private var okHttpClient: OkHttpClient? = null
 
-    fun getClient(): Retrofit? {
+    fun getClient(): Retrofit {
         if (okHttpClient == null) initOkHttp()
-        if (retrofit == null) {
-            retrofit = Retrofit.Builder()
-                .baseUrl(AppUtils.BASE_MOVIE_URL)
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
+
+        retrofit = Retrofit.Builder()
+            .baseUrl(AppUtils.BASE_MOVIE_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
         return retrofit
     }
 

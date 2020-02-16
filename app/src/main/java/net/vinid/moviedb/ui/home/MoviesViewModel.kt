@@ -49,11 +49,6 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     private val _errUpComing = MutableLiveData<Throwable>()
     val errUpComing: LiveData<Throwable> get() = _errUpComing
 
-
-
-
-
-
     fun requestGetMovieByPage(category: String, page: Int) {
         when (category) {
             AppUtils.MOVIE_POPULAR -> {

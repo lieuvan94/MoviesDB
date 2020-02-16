@@ -1,6 +1,5 @@
 package net.vinid.moviedb.data.repository
 
-import android.content.Context
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import net.vinid.moviedb.data.local.dao.MovieDAO
@@ -13,14 +12,13 @@ import net.vinid.moviedb.util.AppUtils
 import net.vinid.moviedb.util.NetworkManager
 
 class MovieRepositoryImpl(
-    context: Context,
     private val localDataSource: MovieDAO,
-    private val remoteDataSource: APIService
+    private val remoteDataSource: APIService,
+    private val networkManager: NetworkManager
 ) : MovieRepository {
-    private val networkManager: NetworkManager = NetworkManager(context)
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
-        return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
+        return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>() {
             // save data from remote to local
             override fun saveCallResult(item: ListMovieResponse) {
                 val listMovieEntity = AppUtils
@@ -29,7 +27,7 @@ class MovieRepositoryImpl(
             }
 
             override fun loadFromDb(): Flowable<List<MovieEntity>> {
-                val list = localDataSource.getMoviesByPageAndCategory(page,category)
+                val list = localDataSource.getMoviesByPageAndCategory(page, category)
                 if (list.isNullOrEmpty())
                     return Flowable.empty()
                 return Flowable.fromArray(list)
@@ -37,6 +35,7 @@ class MovieRepositoryImpl(
 
             // call API
             override fun createCall(): Observable<Resource<ListMovieResponse>> {
+                // request by category
                 return remoteDataSource.getMovieByCategory(category, page)
                     .flatMap { t -> Observable.just(Resource.success(t)) }
             }
@@ -54,5 +53,4 @@ class MovieRepositoryImpl(
             }
         }.getResource()
     }
-
 }

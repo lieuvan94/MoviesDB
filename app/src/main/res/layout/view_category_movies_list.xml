@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movieCategoryTitle"
             tools:listitem="@layout/item_movies"
-            android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"/>
+            android:visibility="visible"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/noDataTextView"
@@ -61,7 +61,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_20sp"
             android:textStyle="italic"
-            android:visibility="@{isVisible ? View.GONE : View.VISIBLE}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movieCategoryTitle" />

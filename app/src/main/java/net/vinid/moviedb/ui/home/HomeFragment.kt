@@ -7,17 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_category_movies_list.view.*
-import androidx.lifecycle.ViewModelProvider
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
+import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
 import net.vinid.moviedb.util.AppUtils
 
 /**
@@ -50,17 +50,21 @@ class HomeFragment : BaseFragment() {
     private var topRateListState: Int = 0
     private var nowPlayingListState: Int = 0
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
 
         initView()
         initViewModel()
+
+        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView, AppUtils.MOVIE_POPULAR)
+
+        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_NOW_PLAYING)
+
+        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_UPCOMING)
+
+        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, AppUtils.MOVIE_TOP_RATES)
 
         return dataBinding.root
     }
@@ -79,12 +83,11 @@ class HomeFragment : BaseFragment() {
         moviesViewModel.requestGetMovieByPage(category, page)
     }
 
-    private fun initLoadMore(recyclerView: RecyclerView
-                             , linearLayoutManager: LinearLayoutManager, category: String){
+    private fun initLoadMore(recyclerView: RecyclerView, category: String){
         // first load data
         requestGetMovie(category, firstPage)
 
-        val scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        val scrollListener = object : EndlessRecyclerViewScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun setLastPosition(view: RecyclerView) {
                 view.scrollToPosition(recyclerView.adapter?.itemCount!!)
             }
@@ -118,45 +121,29 @@ class HomeFragment : BaseFragment() {
 
     private fun initViewModel() {
         moviesViewModel.popularMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, popularMovieAdapter, AppUtils.MOVIE_POPULAR)
+            updateListMovie(it, popularMovieAdapter)
         })
 
         moviesViewModel.upComingMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, upComingMovieAdapter, AppUtils.MOVIE_UPCOMING)
+            updateListMovie(it, upComingMovieAdapter)
         })
 
         moviesViewModel.topRatesMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, topRateMovieAdapter, AppUtils.MOVIE_TOP_RATES)
+            updateListMovie(it, topRateMovieAdapter)
         })
 
         moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
+            updateListMovie(it, nowPlayingMovieAdapter)
         })
-
-        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView,
-            dataBinding.includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
-            AppUtils.MOVIE_POPULAR)
-
-        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView,
-            dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
-            AppUtils.MOVIE_NOW_PLAYING)
-
-        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView,
-            dataBinding.includedUpComingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
-            AppUtils.MOVIE_UPCOMING)
-
-        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView,
-            dataBinding.includedTopRateMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager,
-            AppUtils.MOVIE_TOP_RATES)
     }
 
-    private fun updateMoviesList(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter, category: String) {
+    private fun updateListMovie(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter) {
         adapter.setItems(movies)
     }
 
-    private fun updateGenresList(genres: List<GenresItem>) {
-        genresAdapter.setItems(genres)
-    }
+//    private fun updateGenresList(genres: List<GenresItem>) {
+//        genresAdapter.setItems(genres)
+//    }
 
     private fun saveListSate(){
         popularListState = (includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
@@ -170,10 +157,10 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun getListState(){
-        dataBinding.includedPopularMovieLayout.moviesRecyclerView.scrollToPosition(popularListState)
-        dataBinding.includedUpComingMovieLayout.moviesRecyclerView.scrollToPosition(upComingListState)
-        dataBinding.includedTopRateMovieLayout.moviesRecyclerView.scrollToPosition(topRateListState)
-        dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView.scrollToPosition(nowPlayingListState)
+        includedPopularMovieLayout.moviesRecyclerView.scrollToPosition(popularListState)
+        includedUpComingMovieLayout.moviesRecyclerView.scrollToPosition(upComingListState)
+        includedTopRateMovieLayout.moviesRecyclerView.scrollToPosition(topRateListState)
+        includedNowPlayingMovieLayout.moviesRecyclerView.scrollToPosition(nowPlayingListState)
     }
 }
 
