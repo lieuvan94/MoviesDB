@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_category_movies_list.view.*
+import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.local.entity.GenreEntity
@@ -32,10 +33,6 @@ class HomeFragment : BaseFragment() {
     private val moviesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
     }
-
-//    private val genresViewModel: GenresViewModel by lazy {
-//        ViewModelProviders.of(this).get(GenresViewModel::class.java)
-//    }
 
     private lateinit var popularMovieAdapter: MoviesAdapter
     private lateinit var upComingMovieAdapter: MoviesAdapter
@@ -142,6 +139,14 @@ class HomeFragment : BaseFragment() {
         moviesViewModel.genres.observe(viewLifecycleOwner, Observer {
             updateListGenres(it)
         })
+
+        moviesViewModel.errorGetData.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { it ->
+                val rootView = activity as MainActivity
+                rootView.showMes(it.message!!)
+            }
+        })
+
     }
 
     private fun updateListMovie(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter) {

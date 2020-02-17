@@ -26,6 +26,8 @@ object AppUtils{
 
     const val TIME_WAIT_LOAD_DATA = 1500L
 
+    const val NETWORK_ERR_MES = "No internet connection. Switching to offline mode"
+
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
         return movieResponse.map {

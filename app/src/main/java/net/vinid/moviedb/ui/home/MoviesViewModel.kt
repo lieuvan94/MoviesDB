@@ -7,6 +7,7 @@ import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
+import net.vinid.moviedb.ui.common.EventWrapper
 import net.vinid.moviedb.util.AppUtils
 
 /**
@@ -41,17 +42,9 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     private val _genres = MutableLiveData<ArrayList<GenreEntity>>()
     val genres: LiveData<ArrayList<GenreEntity>> get() = _genres
 
-    private val _errPopular = MutableLiveData<Throwable>()
-    val errorPopular: LiveData<Throwable> get() = _errPopular
+    private val _errGetData = MutableLiveData<EventWrapper<Throwable>>()
+    val errorGetData: LiveData<EventWrapper<Throwable>> get() = _errGetData
 
-    private val _errNowPlaying = MutableLiveData<Throwable>()
-    val errNowPlaying: LiveData<Throwable> get() = _errNowPlaying
-
-    private val _errTopRates = MutableLiveData<Throwable>()
-    val errTopRates: LiveData<Throwable> get() = _errTopRates
-
-    private val _errUpComing = MutableLiveData<Throwable>()
-    val errUpComing: LiveData<Throwable> get() = _errUpComing
 
     fun requestGetMovieByPage(category: String, page: Int) {
         when (category) {
@@ -64,7 +57,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .subscribe({
                             _popularMovie.value = it.data!! as ArrayList<MovieEntity>
                         }, {
-                            _errTopRates.value = it
+                            _errGetData.value = EventWrapper(it)
                         })
                 )
             }
@@ -78,7 +71,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .subscribe({
                             _topRates.value = it.data!! as ArrayList<MovieEntity>
                         }, {
-                            _errTopRates.value = it
+                            _errGetData.value = EventWrapper(it)
                         })
 
                 )
@@ -93,7 +86,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .subscribe({
                             _upComing.value = it.data!! as ArrayList<MovieEntity>
                         }, {
-                            _errUpComing.value = it
+                            _errGetData.value = EventWrapper(it)
                         })
                 )
             }
@@ -107,7 +100,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .subscribe({
                             _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
                         }, {
-                            _errNowPlaying.value = it
+                            _errGetData.value = EventWrapper(it)
                         })
                 )
             }
@@ -123,7 +116,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 .subscribe({
                     _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
                 }, {
-                    _errNowPlaying.value = it
+                    _errGetData.value = EventWrapper(it)
                 })
         )
     }
@@ -137,7 +130,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 .subscribe({
                     _genres.value = it.data!! as ArrayList<GenreEntity>
                 }, {
-                    _errNowPlaying.value = it
+                    _errGetData.value = EventWrapper(it)
                 })
         )
     }

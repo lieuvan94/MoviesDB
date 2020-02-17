@@ -11,12 +11,10 @@ import net.vinid.moviedb.data.remote.api.Resource
 import net.vinid.moviedb.data.remote.respone.ListGenresResponse
 import net.vinid.moviedb.data.remote.respone.ListMovieResponse
 import net.vinid.moviedb.util.AppUtils
-import net.vinid.moviedb.util.NetworkManager
 
 class MovieRepositoryImpl(
     private val localDataSource: MovieDAO,
-    private val remoteDataSource: APIService,
-    private val networkManager: NetworkManager
+    private val remoteDataSource: APIService
 ) : MovieRepository {
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
@@ -49,10 +47,6 @@ class MovieRepositoryImpl(
                 return Resource.success(listMovieEntity)
             }
 
-            override fun shouldFetch(): Boolean {
-                // check internet
-                return networkManager.isAvailable
-            }
         }.getResource()
     }
 
@@ -69,11 +63,6 @@ class MovieRepositoryImpl(
                 val listMovieEntity = AppUtils
                     .convertMovieResponeToMovieEntity(item.results, "", page)
                 localDataSource.saveListMovie(listMovieEntity, "", page)
-            }
-
-            override fun shouldFetch(): Boolean {
-                // check internet
-                return networkManager.isAvailable
             }
 
             override fun loadFromDb(): Flowable<List<MovieEntity>> {
@@ -103,11 +92,6 @@ class MovieRepositoryImpl(
             override fun saveCallResult(item: ListGenresResponse) {
                 val listGenres = AppUtils.convertGenresResponeToGenresEntity(item.listGenres)
                 localDataSource.saveListGenres(listGenres)
-            }
-
-            override fun shouldFetch(): Boolean {
-                // check internet
-                return networkManager.isAvailable
             }
 
             override fun loadFromDb(): Flowable<List<GenreEntity>> {

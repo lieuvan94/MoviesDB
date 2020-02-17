@@ -12,21 +12,18 @@ import io.reactivex.schedulers.Schedulers
 abstract class NetworkBoundResource<ResultType, RequestType> {
 
     fun getResource(): Observable<Resource<ResultType>> {
-        return if (this.shouldFetch()) {
-            loadFromDb().toObservable().map { t -> Resource.success(t) }.concatWith(
+        return loadFromDb().toObservable().map { t -> Resource.success(t) }
+            .concatWith(
+                // call API
                 this.createCall()
-                    .doOnNext {
-                        // save remote data to db
-                        saveCallResult(processResponse(it))
-                    }
-                    .distinct()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { convertRequestTypeToResultType(it) }
-            )
-        } else {
-            loadFromDb().toObservable()?.map { t -> Resource.success(t) }!!
-        }
+                .doOnNext {
+                    // save remote data to db
+                    saveCallResult(processResponse(it))
+                }
+                .distinct()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { convertRequestTypeToResultType(it) })
     }
 
     protected abstract fun convertRequestTypeToResultType(requestType: Resource<RequestType>): Resource<ResultType>
@@ -42,9 +39,6 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
     protected open fun onFetchFailed() {
         // Todo: Show dialog "No internet"
     }
-
-    @MainThread
-    protected abstract fun shouldFetch(): Boolean
 
     @MainThread
     protected abstract fun loadFromDb(): Flowable<ResultType>
