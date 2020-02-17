@@ -3,6 +3,7 @@ package net.vinid.moviedb.ui.search
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import net.vinid.moviedb.R
 import net.vinid.moviedb.ui.search.view.SearchByMoviesNameFragment
 import net.vinid.moviedb.ui.search.view.SearchMoviesByCategoryFragment
 import net.vinid.moviedb.ui.search.view.SearchMoviesByGenresFragment
@@ -12,11 +13,10 @@ import net.vinid.moviedb.ui.search.view.SearchMoviesByGenresFragment
  */
 class SearchViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    companion object{
-        const val NUM_PAGER = 3
-        const val MOVIES_NAME = "Movies name"
-        const val CATEGORY = "Category"
-        const val GENRES = "Genres"
+    enum class PageTitle(val title :String) {
+        MOVIES_NAME("Movies name"),
+        CATEGORY("Category"),
+        GENRES("Genres")
     }
 
     override fun getItem(position: Int): Fragment = when (position) {
@@ -27,12 +27,13 @@ class SearchViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAda
     }
 
     override fun getPageTitle(position: Int): CharSequence = when (position) {
-        0 -> MOVIES_NAME
-        1 -> CATEGORY
-        2 -> GENRES
+        0 -> PageTitle.MOVIES_NAME.title
+        1 -> PageTitle.CATEGORY.title
+        2 -> PageTitle.GENRES.title
         else -> ""
     }
 
     override fun getCount(): Int = NUM_PAGER
 
 }
+const val NUM_PAGER =3
