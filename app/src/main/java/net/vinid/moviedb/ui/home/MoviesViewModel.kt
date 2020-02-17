@@ -3,6 +3,7 @@ package net.vinid.moviedb.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
@@ -36,6 +37,9 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     val upComingMovieVisible = Transformations.map(_upComing) {
         it.isNotEmpty()
     }
+
+    private val _genres = MutableLiveData<ArrayList<GenreEntity>>()
+    val genres: LiveData<ArrayList<GenreEntity>> get() = _genres
 
     private val _errPopular = MutableLiveData<Throwable>()
     val errorPopular: LiveData<Throwable> get() = _errPopular
@@ -108,5 +112,33 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 )
             }
         }
+    }
+
+    fun requestMovieByGenre(page: Int, genre: Int){
+        addToDisposable(
+            movieRepository.getMovieByGenres(page, genre)
+                .filter { v -> !v.data!!.isEmpty() }
+                .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
+                .take(1)
+                .subscribe({
+                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                }, {
+                    _errNowPlaying.value = it
+                })
+        )
+    }
+
+    fun requestGetListGenres(){
+        addToDisposable(
+            movieRepository.getListGenres()
+                .filter { v -> !v.data!!.isEmpty() }
+                .switchIfEmpty { _genres.value = ArrayList() }
+                .take(1)
+                .subscribe({
+                    _genres.value = it.data!! as ArrayList<GenreEntity>
+                }, {
+                    _errNowPlaying.value = it
+                })
+        )
     }
 }

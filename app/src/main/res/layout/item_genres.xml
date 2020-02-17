@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="net.vinid.moviedb.ui.home.GenresItem" />
+            type="net.vinid.moviedb.data.local.entity.GenreEntity" />
     </data>
 
     <androidx.cardview.widget.CardView

@@ -3,7 +3,9 @@ package net.vinid.moviedb.util
 
 import io.realm.RealmConfiguration
 import io.realm.RealmList
+import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.remote.respone.GenreResponse
 import net.vinid.moviedb.data.remote.respone.MovieResponse
 
 object AppUtils{
@@ -36,6 +38,12 @@ object AppUtils{
             movie.releaseDate, realmListRenres, movie.originalTitle,
             movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
             movie.vote_count, movie.video, movie.vote_average, category, false, page)
+        }
+    }
+
+    fun convertGenresResponeToGenresEntity(movieResponse: List<GenreResponse>): List<GenreEntity> {
+        return movieResponse.map {
+            GenreEntity(it.id, it.name)
         }
     }
 

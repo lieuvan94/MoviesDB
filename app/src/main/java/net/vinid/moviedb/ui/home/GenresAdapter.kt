@@ -7,14 +7,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
+import net.vinid.moviedb.data.local.entity.GenreEntity
 
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
 class GenresAdapter : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
 
-    private var dataList: MutableList<GenresItem> = mutableListOf()
-    var onItemClick: (genresItem: GenresItem) -> Unit = { _ -> }
+    private var dataList: MutableList<GenreEntity> = mutableListOf()
+    var onItemClick: (genresItem: GenreEntity) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val layoutId = R.layout.item_genres
@@ -41,14 +42,14 @@ class GenresAdapter : RecyclerView.Adapter<GenresAdapter.BindingHolder>(){
         }
     }
 
-    fun setItems(genres: List<GenresItem>) {
+    fun setItems(genres: List<GenreEntity>) {
         val startPosition = this.dataList.size
         this.dataList.addAll(genres)
         notifyItemRangeChanged(startPosition, genres.size)
     }
 
 
-    fun getItem(position: Int): GenresItem {
+    fun getItem(position: Int): GenreEntity {
         return dataList[position]
     }
 

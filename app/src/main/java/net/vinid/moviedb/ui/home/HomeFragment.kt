@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_category_movies_list.view.*
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
+import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
@@ -65,6 +66,8 @@ class HomeFragment : BaseFragment() {
         initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_UPCOMING)
 
         initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, AppUtils.MOVIE_TOP_RATES)
+
+        moviesViewModel.requestGetListGenres()
 
         return dataBinding.root
     }
@@ -135,15 +138,19 @@ class HomeFragment : BaseFragment() {
         moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
             updateListMovie(it, nowPlayingMovieAdapter)
         })
+
+        moviesViewModel.genres.observe(viewLifecycleOwner, Observer {
+            updateListGenres(it)
+        })
     }
 
     private fun updateListMovie(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter) {
         adapter.setItems(movies)
     }
 
-//    private fun updateGenresList(genres: List<GenresItem>) {
-//        genresAdapter.setItems(genres)
-//    }
+    private fun updateListGenres(genres: List<GenreEntity>) {
+        genresAdapter.setItems(genres)
+    }
 
     private fun saveListSate(){
         popularListState = (includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
