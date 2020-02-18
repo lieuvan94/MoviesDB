@@ -1,6 +1,5 @@
 package net.vinid.moviedb.ui.search
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -26,16 +25,15 @@ class SearchMoviesViewModel(private val movieRepository: MovieRepository) : Base
     private val _errSearchMovies = MutableLiveData<Throwable>()
     val errSearchMovies: LiveData<Throwable> get() = _errSearchMovies
 
-    @SuppressLint("CheckResult")
     fun requestSearchMovieByPage(query: String, page: Int) {
         addToDisposable(
             movieRepository.searchMoviesByQuery(query,page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    _searchMovies.postValue(it)
+                    _searchMovies.value = it
                 },{
-                    _errSearchMovies.postValue(it)
+                    _errSearchMovies.value =it
                 })
         )
     }

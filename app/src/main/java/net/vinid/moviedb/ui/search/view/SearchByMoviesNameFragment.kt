@@ -34,8 +34,6 @@ class SearchByMoviesNameFragment : BaseFragment() {
 
     private val sharedViewModel: SearchSharedViewModel by activityViewModels()
 
-    private  lateinit var query: String
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,16 +60,13 @@ class SearchByMoviesNameFragment : BaseFragment() {
 
     private fun initViewModel() {
         sharedViewModel.keyword.observe(viewLifecycleOwner, Observer {
-            query = it
-            searchMoviesViewModel.requestSearchMovieByPage(query,AppUtils.QUERY_PAGE)
+            searchMoviesViewModel.requestSearchMovieByPage(it,AppUtils.QUERY_PAGE)
+            searchMoviesViewModel.searchMovies.observe(viewLifecycleOwner, Observer {movies->
+                updateMoviesList(movies)
+            })
         })
-        searchMoviesViewModel.searchMovies.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it)
-        })
-
-        // handle error
         searchMoviesViewModel.errSearchMovies.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
+            updateMoviesList(ArrayList())
         })
     }
     private fun updateMoviesList(movies: List<MovieEntity>) {
