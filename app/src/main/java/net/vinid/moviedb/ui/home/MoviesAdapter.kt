@@ -48,6 +48,11 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         notifyItemInserted(lastIndex)
     }
 
+    fun clearItem(){
+        dataList.clear()
+        notifyDataSetChanged()
+    }
+
 
     fun getItem(position: Int): MovieEntity {
         return dataList[position]

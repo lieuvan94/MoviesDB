@@ -1,7 +1,7 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +55,33 @@ class HomeFragment : BaseFragment() {
 
         initView()
         initViewModel()
+        initLoadMore()
+        initSwipeToRefresh()
 
+        moviesViewModel.requestGetListGenres()
+
+        return dataBinding.root
+    }
+
+    private fun initSwipeToRefresh() {
+        dataBinding.swipeRefresh.setOnRefreshListener {
+            popularMovieAdapter.clearItem()
+            upComingMovieAdapter.clearItem()
+            nowPlayingMovieAdapter.clearItem()
+            topRateMovieAdapter.clearItem()
+
+            includedPopularMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedNowPlayingMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedUpComingMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedTopRateMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+
+            initLoadMore()
+
+            swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun initLoadMore(){
         initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView, AppUtils.MOVIE_POPULAR)
 
         initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_NOW_PLAYING)
@@ -63,10 +89,6 @@ class HomeFragment : BaseFragment() {
         initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_UPCOMING)
 
         initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, AppUtils.MOVIE_TOP_RATES)
-
-        moviesViewModel.requestGetListGenres()
-
-        return dataBinding.root
     }
 
     override fun onPause() {
@@ -92,11 +114,10 @@ class HomeFragment : BaseFragment() {
                 view.scrollToPosition(recyclerView.adapter?.itemCount!!)
             }
 
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?
+            override fun onLoadMore(
+                page: Int, totalItemsCount: Int, view: RecyclerView?
             ) {
-                Handler().postDelayed({
-                    requestGetMovie(category, page)
-                }, AppUtils.TIME_WAIT_LOAD_DATA)
+                requestGetMovie(category, page)
             }
         }
 

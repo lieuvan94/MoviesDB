@@ -24,8 +24,6 @@ object AppUtils{
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
 
-    const val TIME_WAIT_LOAD_DATA = 1500L
-
     const val NETWORK_ERR_MES = "No internet connection. Switching to offline mode"
 
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
