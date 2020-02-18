@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import kotlinx.coroutines.*
 import net.vinid.moviedb.R
 import net.vinid.moviedb.databinding.FragmentSearchBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.search.SearchViewPagerAdapter
-import net.vinid.moviedb.util.AppUtils
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -21,10 +19,6 @@ class SearchFragment : BaseFragment() {
 
     private lateinit var dataBinding: FragmentSearchBinding
     private lateinit var searchViewPagerAdapter: SearchViewPagerAdapter
-
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
-
-    private var searchJob: Job? = null
 
     private val sharedViewModel: SearchSharedViewModel by activityViewModels()
 
@@ -64,18 +58,10 @@ class SearchFragment : BaseFragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchJob?.cancel()
-                searchJob = coroutineScope.launch {
-                    newText?.let {
-                        delay(AppUtils.REQUEST_DELAY)
-                        if (it.isEmpty()) {
-                            sharedViewModel.keyword.value = newText
-                        } else {
-                            sharedViewModel.keyword.value = newText
-                        }
-                    }
+                if (newText != null) {
+                    sharedViewModel.keyword.value = newText
                 }
-                return false
+                return true
             }
 
         })
