@@ -21,22 +21,19 @@ class MovieDAOImpl : MovieDAO {
     }
 
     override fun getMoviesByGenre(page: Int, genre: Int): List<MovieEntity> {
-        val listMovie = ArrayList<MovieEntity>()
-        val realmListGenre = RealmList<Int>()
+        val listMovieByGenre = ArrayList<MovieEntity>()
+        val listMovie = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(GenreEntity::class.java)
+            .equalTo(AppUtils.COLUMN_GENRE_ID,genre)
+            .findFirst()?.listMovie
 
-        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
-            .where(MovieEntity::class.java)
-            .equalTo(AppUtils.COLUMN_PAGE,page)
-            .findAll()
-        if (!realmResult.isNullOrEmpty()) {
-            for (item in realmResult){
-                val listGenres = item.genreIds?.toList()
-                if (listGenres?.contains(genre)!!){
-                    listMovie.add(item)
-                }
+        for (item in listMovie!!){
+            if (item.page?.equals(page)!!){
+                listMovieByGenre.add(item)
             }
         }
-        return listMovie
+
+        return listMovieByGenre
     }
 
     override fun getListGenres(): List<GenreEntity> {
@@ -67,6 +64,43 @@ class MovieDAOImpl : MovieDAO {
                     // save movie to db
                     realm.copyToRealmOrUpdate(listGenres)
                 }
+            }
+    }
+
+    override fun saveListMovieByGenres(genre: GenreEntity, page: Int, listMovie: RealmList<MovieEntity>) {
+        Realm.getInstance(AppUtils.initRealmConfig())
+            .executeTransactionAsync{ realm ->
+                val realmResult = realm
+                    .where(GenreEntity::class.java)
+                    .equalTo(AppUtils.COLUMN_GENRE_ID, page)
+                    .findFirst()
+
+                if (!realmResult?.listMovie.isNullOrEmpty()){
+                    for (item in realmResult?.listMovie!!){
+                        if (item.page?.equals(page)!!){
+                            realmResult.listMovie.remove(item)
+                        }
+                    }
+                }
+
+                realmResult?.listMovie?.addAll(listMovie)
+//                var list = realmResult?.listMovie
+//                Log.d("TEST", "MovieDAOImp: -saveListMovieByGenres - BEfore add - getList: " + realmResult?.listMovie?.size!!)
+//                for (item in list!!) {
+//                    Log.d(
+//                        "TEST",
+//                        "MovieDAOImp - saveListMovieByGenres - getList: " + item.id + ", " + item.title + ", " + item.page
+//                    )
+//                }
+//                realmResult.listMovie.addAll(listMovie)
+//                list = realmResult.listMovie
+//                Log.d("TEST", "MovieDAOImp: -saveListMovieByGenres - After add - getList: " + list.size)
+//                for (item in list) {
+//                    Log.d(
+//                        "TEST",
+//                        "MovieDAOImp - saveListMovieByGenres - getList: " + item.id + ", " + item.title + ", " + item.page
+//                    )
+//                }
             }
     }
 }

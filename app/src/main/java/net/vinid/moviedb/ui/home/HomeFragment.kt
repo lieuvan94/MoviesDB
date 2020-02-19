@@ -138,6 +138,13 @@ class HomeFragment : BaseFragment() {
         genresAdapter = GenresAdapter()
         dataBinding.genresRecyclerView.adapter = this@HomeFragment.genresAdapter
 
+        genresAdapter.onItemClick = {
+            getMovieByGenre(it)
+        }
+    }
+
+    private fun getMovieByGenre(genre: GenreEntity) {
+        moviesViewModel.requestMovieByGenre(1, genre)
     }
 
     private fun initViewModel() {

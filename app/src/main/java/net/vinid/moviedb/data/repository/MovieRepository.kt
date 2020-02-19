@@ -7,6 +7,6 @@ import net.vinid.moviedb.data.remote.api.Resource
 
 interface MovieRepository {
     fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>>
-    fun getMovieByGenres(page: Int, genre: Int): Observable<Resource<List<MovieEntity>>>
+    fun getMovieByGenres(page: Int, genre: GenreEntity): Observable<Resource<List<MovieEntity>>>
     fun getListGenres(): Observable<Resource<List<GenreEntity>>>
 }

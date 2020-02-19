@@ -1,5 +1,6 @@
 package net.vinid.moviedb.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -107,14 +108,16 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
         }
     }
 
-    fun requestMovieByGenre(page: Int, genre: Int){
+    fun requestMovieByGenre(page: Int, genre: GenreEntity){
         addToDisposable(
-            movieRepository.getMovieByGenres(page, genre)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
+            movieRepository.getMovieByGenres(28, genre)
                 .take(1)
                 .subscribe({
-                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                    Log.d("TEST","MovieViewModel - size: "+it.data!!.size)
+                    for (item in it.data!!){
+                        Log.d("TEST","MovieViewModel - "+item.title!! +", "+item.id!!)
+                    }
+//                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
                 }, {
                     _errGetData.value = EventWrapper(it)
                 })

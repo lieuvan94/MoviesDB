@@ -1,5 +1,6 @@
 package net.vinid.moviedb.data.local.dao
 
+import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 
@@ -8,5 +9,6 @@ interface MovieDAO {
     fun getMoviesByGenre(page: Int, genre: Int): List<MovieEntity>
     fun getListGenres(): List<GenreEntity>
     fun saveListMovie(listMovie: List<MovieEntity>, category: String, page: Int)
-    fun saveListGenres(listMovie: List<GenreEntity>)
+    fun saveListGenres(listGenres: List<GenreEntity>)
+    fun saveListMovieByGenres(genre: GenreEntity, page: Int, listMovie: RealmList<MovieEntity>)
 }

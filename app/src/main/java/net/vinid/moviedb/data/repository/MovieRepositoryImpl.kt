@@ -1,7 +1,9 @@
 package net.vinid.moviedb.data.repository
 
+import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.realm.RealmList
 import net.vinid.moviedb.data.local.dao.MovieDAO
 import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
@@ -51,7 +53,7 @@ class MovieRepositoryImpl(
     }
 
     //Todo: Get movie specification genre
-    override fun getMovieByGenres(page: Int, genre: Int): Observable<Resource<List<MovieEntity>>> {
+    override fun getMovieByGenres(page: Int, genre: GenreEntity): Observable<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
             override fun convertRequestTypeToResultType(requestType: Resource<ListMovieResponse>): Resource<List<MovieEntity>> {
                 val listMovieEntity = AppUtils
@@ -62,18 +64,22 @@ class MovieRepositoryImpl(
             override fun saveCallResult(item: ListMovieResponse) {
                 val listMovieEntity = AppUtils
                     .convertMovieResponeToMovieEntity(item.results, "", page)
-                localDataSource.saveListMovie(listMovieEntity, "", page)
+
+                val realmList = RealmList<MovieEntity>()
+                realmList.addAll(listMovieEntity)
+
+                localDataSource.saveListMovieByGenres(genre, page, realmList)
             }
 
             override fun loadFromDb(): Flowable<List<MovieEntity>> {
-                val list = localDataSource.getMoviesByGenre(page, genre)
+                val list = localDataSource.getMoviesByGenre(page, genre.id)
                 if (list.isNullOrEmpty())
                     return Flowable.empty()
                 return Flowable.fromArray(list)
             }
 
             override fun createCall(): Observable<Resource<ListMovieResponse>> {
-                return remoteDataSource.getMovieByGenres(page, genre)
+                return remoteDataSource.getMovieByGenres(page, genre.id)
                     .flatMap { t -> Observable.just(Resource.success(t)) }
             }
 
