@@ -11,6 +11,16 @@
         android:name="net.vinid.moviedb.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_HomeFragment_to_GenreMovieFragment"
+            app:destination="@id/genreScreen"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/genreScreen"
+        android:name="net.vinid.moviedb.ui.genres.GenreMovieFragment"
+        tools:layout="@layout/fragment_genre_movie">
     </fragment>
 
 </navigation>

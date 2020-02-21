@@ -1,13 +1,13 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -15,12 +15,14 @@ import kotlinx.android.synthetic.main.view_category_movies_list.view.*
 import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
+import net.vinid.moviedb.ui.genres.GenreItem
+import net.vinid.moviedb.ui.genres.GenresAdapter
 import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.util.AppUtils.BUNDLE_KEY_GENRE_ITEM
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -139,12 +141,17 @@ class HomeFragment : BaseFragment() {
         dataBinding.genresRecyclerView.adapter = this@HomeFragment.genresAdapter
 
         genresAdapter.onItemClick = {
-            getMovieByGenre(it)
+            showMovieByGenre(it)
         }
     }
 
-    private fun getMovieByGenre(genre: GenreEntity) {
-        moviesViewModel.requestMovieByGenre(1, genre)
+    private fun showMovieByGenre(genre: GenreItem) {
+        val bundle = Bundle()
+        bundle.putSerializable(BUNDLE_KEY_GENRE_ITEM, genre)
+
+        this.findNavController().navigate(
+            R.id.genreScreen, bundle
+        )
     }
 
     private fun initViewModel() {
@@ -181,7 +188,7 @@ class HomeFragment : BaseFragment() {
         adapter.setItems(movies)
     }
 
-    private fun updateListGenres(genres: List<GenreEntity>) {
+    private fun updateListGenres(genres: List<GenreItem>) {
         genresAdapter.setItems(genres)
     }
 

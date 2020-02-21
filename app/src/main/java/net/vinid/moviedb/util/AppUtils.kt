@@ -27,6 +27,8 @@ object AppUtils{
 
     const val NETWORK_ERR_MES = "No internet connection. Switching to offline mode"
 
+    const val BUNDLE_KEY_GENRE_ITEM = "genre_item"
+
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
         return movieResponse.map {

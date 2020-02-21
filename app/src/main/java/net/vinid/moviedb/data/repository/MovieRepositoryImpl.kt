@@ -53,7 +53,7 @@ class MovieRepositoryImpl(
     }
 
     //Todo: Get movie specification genre
-    override fun getMovieByGenres(page: Int, genre: GenreEntity): Observable<Resource<List<MovieEntity>>> {
+    override fun getMovieByGenres(page: Int, genreId: Int): Observable<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
             override fun convertRequestTypeToResultType(requestType: Resource<ListMovieResponse>): Resource<List<MovieEntity>> {
                 val listMovieEntity = AppUtils
@@ -68,18 +68,18 @@ class MovieRepositoryImpl(
                 val realmList = RealmList<MovieEntity>()
                 realmList.addAll(listMovieEntity)
 
-                localDataSource.saveListMovieByGenres(genre, page, realmList)
+                localDataSource.saveListMovieByGenres(genreId, page, realmList)
             }
 
             override fun loadFromDb(): Flowable<List<MovieEntity>> {
-                val list = localDataSource.getMoviesByGenre(page, genre.id)
+                val list = localDataSource.getMoviesByGenre(page, genreId)
                 if (list.isNullOrEmpty())
                     return Flowable.empty()
                 return Flowable.fromArray(list)
             }
 
             override fun createCall(): Observable<Resource<ListMovieResponse>> {
-                return remoteDataSource.getMovieByGenres(page, genre.id)
+                return remoteDataSource.getMovieByGenres(page, genreId)
                     .flatMap { t -> Observable.just(Resource.success(t)) }
             }
 

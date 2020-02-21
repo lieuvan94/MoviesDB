@@ -10,5 +10,5 @@ interface MovieDAO {
     fun getListGenres(): List<GenreEntity>
     fun saveListMovie(listMovie: List<MovieEntity>, category: String, page: Int)
     fun saveListGenres(listGenres: List<GenreEntity>)
-    fun saveListMovieByGenres(genre: GenreEntity, page: Int, listMovie: RealmList<MovieEntity>)
+    fun saveListMovieByGenres(genreId: Int, page: Int, listMovie: RealmList<MovieEntity>)
 }

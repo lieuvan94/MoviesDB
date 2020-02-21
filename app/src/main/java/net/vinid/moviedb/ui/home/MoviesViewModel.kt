@@ -1,14 +1,13 @@
 package net.vinid.moviedb.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
 import net.vinid.moviedb.ui.common.EventWrapper
+import net.vinid.moviedb.ui.genres.GenreItem
 import net.vinid.moviedb.util.AppUtils
 
 /**
@@ -40,11 +39,14 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
         it.isNotEmpty()
     }
 
-    private val _genres = MutableLiveData<ArrayList<GenreEntity>>()
-    val genres: LiveData<ArrayList<GenreEntity>> get() = _genres
+    private val _genres = MutableLiveData<ArrayList<GenreItem>>()
+    val genres: LiveData<ArrayList<GenreItem>> get() = _genres
 
     private val _errGetData = MutableLiveData<EventWrapper<Throwable>>()
     val errorGetData: LiveData<EventWrapper<Throwable>> get() = _errGetData
+
+    private val _genreListMovie = MutableLiveData<ArrayList<MovieEntity>>()
+    val genreListMovie: LiveData<ArrayList<MovieEntity>> get() = _genreListMovie
 
 
     fun requestGetMovieByPage(category: String, page: Int) {
@@ -108,16 +110,12 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
         }
     }
 
-    fun requestMovieByGenre(page: Int, genre: GenreEntity){
+    fun requestMovieByGenre(page: Int, genreId: Int){
         addToDisposable(
-            movieRepository.getMovieByGenres(28, genre)
+            movieRepository.getMovieByGenres(page, genreId)
                 .take(1)
                 .subscribe({
-                    Log.d("TEST","MovieViewModel - size: "+it.data!!.size)
-                    for (item in it.data!!){
-                        Log.d("TEST","MovieViewModel - "+item.title!! +", "+item.id!!)
-                    }
-//                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                    _genreListMovie.value = it.data!! as ArrayList<MovieEntity>
                 }, {
                     _errGetData.value = EventWrapper(it)
                 })
@@ -130,8 +128,15 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 .filter { v -> !v.data!!.isEmpty() }
                 .switchIfEmpty { _genres.value = ArrayList() }
                 .take(1)
+                .map {
+                    it.data?.map {
+                        genreEntity ->
+                        GenreItem(genreEntity)
+                    }
+                }
                 .subscribe({
-                    _genres.value = it.data!! as ArrayList<GenreEntity>
+                    _genres.value = it as ArrayList<GenreItem>
+
                 }, {
                     _errGetData.value = EventWrapper(it)
                 })

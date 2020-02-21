@@ -67,12 +67,12 @@ class MovieDAOImpl : MovieDAO {
             }
     }
 
-    override fun saveListMovieByGenres(genre: GenreEntity, page: Int, listMovie: RealmList<MovieEntity>) {
+    override fun saveListMovieByGenres(genreId: Int, page: Int, listMovie: RealmList<MovieEntity>) {
         Realm.getInstance(AppUtils.initRealmConfig())
             .executeTransactionAsync{ realm ->
                 val realmResult = realm
                     .where(GenreEntity::class.java)
-                    .equalTo(AppUtils.COLUMN_GENRE_ID, page)
+                    .equalTo(AppUtils.COLUMN_GENRE_ID, genreId)
                     .findFirst()
 
                 if (!realmResult?.listMovie.isNullOrEmpty()){
