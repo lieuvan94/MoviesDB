@@ -26,15 +26,20 @@ class SearchMoviesViewModel(private val movieRepository: MovieRepository) : Base
     val errSearchMovies: LiveData<Throwable> get() = _errSearchMovies
 
     fun requestSearchMovieByPage(query: String, page: Int) {
-        addToDisposable(
-            movieRepository.searchMoviesByQuery(query,page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _searchMovies.value = it
-                },{
-                    _errSearchMovies.value =it
-                })
-        )
+        if(query.isEmpty()){
+            _searchMovies.value = ArrayList()
+        }else{
+            addToDisposable(
+                movieRepository.searchMoviesByQuery(query,page)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        _searchMovies.value = it
+                    },{
+                        _errSearchMovies.value =it
+                    })
+            )
+        }
+
     }
 }

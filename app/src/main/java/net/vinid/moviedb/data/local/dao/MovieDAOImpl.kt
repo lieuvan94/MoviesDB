@@ -1,5 +1,6 @@
 package net.vinid.moviedb.data.local.dao
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.GenreEntity
@@ -82,7 +83,6 @@ class MovieDAOImpl : MovieDAO {
                         }
                     }
                 }
-
                 realmResult?.listMovie?.addAll(listMovie)
             }
     }
@@ -114,5 +114,33 @@ class MovieDAOImpl : MovieDAO {
             listMovies.addAll(realmResult)
         }
         return listMovies
+    }
+
+    override fun getMoviesByPage(page: Int): List<MovieEntity> {
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .equalTo(AppUtils.COLUMN_PAGE, page)
+            .findAll()
+        if (!realmResult.isNullOrEmpty()) {
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
+    }
+
+    override fun searchMoviesByQuery(query: String): List<MovieEntity> {
+        Log.d("MovieDAOImpl","searchMoviesByQuery : query: "+query)
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .contains(AppUtils.COLUMN_MOVIE_TITLE, query)
+            .findAll()
+            .distinctBy {
+                it.title
+            }
+        if (!realmResult.isNullOrEmpty()){
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
     }
 }
