@@ -3,11 +3,13 @@ package net.vinid.moviedb.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.mapper.toGenreItem
+import net.vinid.moviedb.data.mapper.toMovieItem
+import net.vinid.moviedb.data.model.GenreItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
 import net.vinid.moviedb.ui.common.EventWrapper
-import net.vinid.moviedb.ui.genres.GenreItem
 import net.vinid.moviedb.util.AppUtils
 
 /**
@@ -15,26 +17,26 @@ import net.vinid.moviedb.util.AppUtils
  */
 class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewModel() {
 
-    private val _popularMovie = MutableLiveData<ArrayList<MovieEntity>>()
-    val popularMovie: LiveData<ArrayList<MovieEntity>> get() = _popularMovie
+    private val _popularMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val popularMovie: LiveData<ArrayList<MovieItem>> get() = _popularMovie
     val popularMovieVisible = Transformations.map(_popularMovie){
         it.isNotEmpty()
     }
 
-    private val _nowPlayingMovie = MutableLiveData<ArrayList<MovieEntity>>()
-    val nowPlayingMovie: LiveData<ArrayList<MovieEntity>> get() = _nowPlayingMovie
+    private val _nowPlayingMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val nowPlayingMovie: LiveData<ArrayList<MovieItem>> get() = _nowPlayingMovie
     val nowPlayingMovieVisible = Transformations.map(_nowPlayingMovie) {
         it.isNotEmpty()
     }
 
-    private val _topRates = MutableLiveData<ArrayList<MovieEntity>>()
-    val topRatesMovie: LiveData<ArrayList<MovieEntity>> get() = _topRates
+    private val _topRates = MutableLiveData<ArrayList<MovieItem>>()
+    val topRatesMovie: LiveData<ArrayList<MovieItem>> get() = _topRates
     val topRatesMovieVisible = Transformations.map(_topRates) {
         it.isNotEmpty()
     }
 
-    private val _upComing = MutableLiveData<ArrayList<MovieEntity>>()
-    val upComingMovie: LiveData<ArrayList<MovieEntity>> get() = _upComing
+    private val _upComing = MutableLiveData<ArrayList<MovieItem>>()
+    val upComingMovie: LiveData<ArrayList<MovieItem>> get() = _upComing
     val upComingMovieVisible = Transformations.map(_upComing) {
         it.isNotEmpty()
     }
@@ -45,8 +47,8 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     private val _errGetData = MutableLiveData<EventWrapper<Throwable>>()
     val errorGetData: LiveData<EventWrapper<Throwable>> get() = _errGetData
 
-    private val _genreListMovie = MutableLiveData<ArrayList<MovieEntity>>()
-    val genreListMovie: LiveData<ArrayList<MovieEntity>> get() = _genreListMovie
+    private val _genreListMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val genreListMovie: LiveData<ArrayList<MovieItem>> get() = _genreListMovie
 
 
     fun requestGetMovieByPage(category: String, page: Int) {
@@ -57,8 +59,11 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .filter { v -> !v.data!!.isEmpty() }
                         .switchIfEmpty { _popularMovie.value = ArrayList() }
                         .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
                         .subscribe({
-                            _popularMovie.value = it.data!! as ArrayList<MovieEntity>
+                            _popularMovie.value = it as ArrayList<MovieItem>
                         }, {
                             _errGetData.value = EventWrapper(it)
                         })
@@ -71,8 +76,11 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .filter { v -> !v.data!!.isEmpty() }
                         .switchIfEmpty { _topRates.value = ArrayList() }
                         .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
                         .subscribe({
-                            _topRates.value = it.data!! as ArrayList<MovieEntity>
+                            _topRates.value = it as ArrayList<MovieItem>
                         }, {
                             _errGetData.value = EventWrapper(it)
                         })
@@ -86,8 +94,11 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .filter { v -> !v.data!!.isEmpty() }
                         .switchIfEmpty { _upComing.value = ArrayList() }
                         .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
                         .subscribe({
-                            _upComing.value = it.data!! as ArrayList<MovieEntity>
+                            _upComing.value = it as ArrayList<MovieItem>
                         }, {
                             _errGetData.value = EventWrapper(it)
                         })
@@ -100,8 +111,11 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                         .filter { v -> !v.data!!.isEmpty() }
                         .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
                         .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
                         .subscribe({
-                            _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                            _nowPlayingMovie.value = it as ArrayList<MovieItem>
                         }, {
                             _errGetData.value = EventWrapper(it)
                         })
@@ -114,8 +128,11 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
         addToDisposable(
             movieRepository.getMovieByGenres(page, genreId)
                 .take(1)
+                .map {
+                    it.data?.toMovieItem()
+                }
                 .subscribe({
-                    _genreListMovie.value = it.data!! as ArrayList<MovieEntity>
+                    _genreListMovie.value = it as ArrayList<MovieItem>
                 }, {
                     _errGetData.value = EventWrapper(it)
                 })
@@ -129,10 +146,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 .switchIfEmpty { _genres.value = ArrayList() }
                 .take(1)
                 .map {
-                    it.data?.map {
-                        genreEntity ->
-                        GenreItem(genreEntity)
-                    }
+                    it.data?.toGenreItem()
                 }
                 .subscribe({
                     _genres.value = it as ArrayList<GenreItem>

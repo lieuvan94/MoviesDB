@@ -15,11 +15,11 @@ import kotlinx.android.synthetic.main.view_category_movies_list.view.*
 import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.GenreItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
-import net.vinid.moviedb.ui.genres.GenreItem
 import net.vinid.moviedb.ui.genres.GenresAdapter
 import net.vinid.moviedb.util.AppUtils
 import net.vinid.moviedb.util.AppUtils.BUNDLE_KEY_GENRE_ITEM
@@ -184,7 +184,7 @@ class HomeFragment : BaseFragment() {
 
     }
 
-    private fun updateListMovie(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter) {
+    private fun updateListMovie(movies: ArrayList<MovieItem>, adapter: MoviesAdapter) {
         adapter.setItems(movies)
     }
 

@@ -7,15 +7,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.MovieItem
 
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
-    private var dataList: ArrayList<MovieEntity> = ArrayList()
+    private var dataList: ArrayList<MovieItem> = ArrayList()
 
-    var onItemClick: (moviesItem: MovieEntity) -> Unit = { _ -> }
+    var onItemClick: (moviesItem: MovieItem) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val layoutId = R.layout.item_movies
@@ -42,7 +42,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         }
     }
 
-    fun setItems(newListMovie: List<MovieEntity>) {
+    fun setItems(newListMovie: List<MovieItem>) {
         val lastIndex = dataList.size
         dataList.addAll(newListMovie)
         notifyItemInserted(lastIndex)
@@ -51,11 +51,6 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
     fun clearItem(){
         dataList.clear()
         notifyDataSetChanged()
-    }
-
-
-    fun getItem(position: Int): MovieEntity {
-        return dataList[position]
     }
 
     class BindingHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)

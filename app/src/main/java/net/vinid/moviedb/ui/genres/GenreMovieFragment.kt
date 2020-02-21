@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.GenreItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentGenreMovieBinding
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
 import net.vinid.moviedb.ui.home.MoviesAdapter
@@ -74,7 +75,7 @@ class GenreMovieFragment : Fragment() {
 
     private fun initToolbar() {
         (activity as MainActivity).setSupportActionBar(dataBinding.toolbar)
-        dataBinding.toolbar.setTitle(genre!!.genreEntity.name)
+        dataBinding.toolbar.title = genre!!.genreEntity.name
 
     }
 
@@ -90,7 +91,7 @@ class GenreMovieFragment : Fragment() {
 
     }
 
-    private fun updateListMovie(listMovie: ArrayList<MovieEntity>) {
+    private fun updateListMovie(listMovie: ArrayList<MovieItem>) {
         genreMovieAdapter?.setItems(listMovie)
     }
 

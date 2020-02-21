@@ -1,6 +1,5 @@
 package net.vinid.moviedb.data.repository
 
-import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.realm.RealmList

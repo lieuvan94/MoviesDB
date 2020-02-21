@@ -7,6 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
+import net.vinid.moviedb.data.model.GenreItem
 
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
