@@ -16,4 +16,6 @@
     <string name="more_image">More Image</string>
     <string name="no_data_movies">Movies not available</string>
     <string name="search_title_hint">Type your movies name here</string>
+    <string name="movies_name_title">Movies name</string>
+    <string name="category_title">Category</string>
 </resources>

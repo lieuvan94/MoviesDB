@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import kotlinx.coroutines.*
 import net.vinid.moviedb.R
 import net.vinid.moviedb.databinding.FragmentSearchBinding
 import net.vinid.moviedb.ui.base.BaseFragment
-import net.vinid.moviedb.ui.search.SearchViewPagerAdapter
+import net.vinid.moviedb.ui.common.ViewPagerAdapter
+import net.vinid.moviedb.util.AppUtils
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -18,7 +20,10 @@ import net.vinid.moviedb.ui.search.SearchViewPagerAdapter
 class SearchFragment : BaseFragment() {
 
     private lateinit var dataBinding: FragmentSearchBinding
-    private lateinit var searchViewPagerAdapter: SearchViewPagerAdapter
+
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
+
+    private var searchJob: Job? = null
 
     private val sharedViewModel: SearchSharedViewModel by activityViewModels()
 
@@ -31,16 +36,13 @@ class SearchFragment : BaseFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         dataBinding.lifecycleOwner = this
 
+        initViewPager()
         initView()
 
         return dataBinding.root
     }
 
     private fun initView(){
-        searchViewPagerAdapter = SearchViewPagerAdapter(childFragmentManager)
-        dataBinding.moviesResultViewPager.adapter = searchViewPagerAdapter
-        dataBinding.searchMoviesTabLayout.setupWithViewPager(dataBinding.moviesResultViewPager)
-
         dataBinding.svSearchMovies.apply {
             isActivated = true
             queryHint = context.resources.getString(R.string.search_title_hint)
@@ -58,12 +60,47 @@ class SearchFragment : BaseFragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    sharedViewModel.keyword.value = newText
+                searchJob?.cancel()
+                searchJob = coroutineScope.launch {
+                    newText?.let {
+                        delay(AppUtils.REQUEST_DELAY)
+                        if (it.isEmpty()) {
+                            sharedViewModel.keyword.value = newText
+                        } else {
+                            sharedViewModel.keyword.value = newText
+                        }
+                    }
                 }
-                return true
+                return false
             }
 
         })
+    }
+
+    private fun initViewPager(){
+        val viewPagerAdapter = ViewPagerAdapter(childFragmentManager)
+
+        viewPagerAdapter.apply {
+            addFragment(
+                SearchByMoviesNameFragment(),getString(R.string.movies_name_title)
+            )
+            addFragment(
+                SearchMoviesByCategoryFragment(),getString(R.string.category_title)
+            )
+            addFragment(
+                SearchMoviesByGenresFragment(),getString(R.string.genres_label)
+            )
+        }
+        dataBinding.moviesResultViewPager.apply {
+            adapter = viewPagerAdapter
+            offscreenPageLimit = OFF_SCREEN_PAGE_LIMIT
+            currentItem = CURRENT_ITEM
+        }
+        dataBinding.searchMoviesTabLayout.setupWithViewPager(dataBinding.moviesResultViewPager)
+    }
+
+    companion object{
+        const val OFF_SCREEN_PAGE_LIMIT = 3
+        const val CURRENT_ITEM = 0
     }
 }
