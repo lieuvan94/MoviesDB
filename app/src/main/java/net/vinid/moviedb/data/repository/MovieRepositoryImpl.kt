@@ -113,4 +113,12 @@ class MovieRepositoryImpl(
 
         }.getResource()
     }
+
+    override fun updateMovieStatus(movie: MovieEntity, isLike: Boolean){
+        localDataSource.updateMovieStatus(movie, isLike)
+    }
+
+    override fun getMoviesLiked(): Observable<Resource<List<MovieEntity>>> {
+        return Observable.just(Resource.success(localDataSource.getMoviesLiked()))
+    }
 }

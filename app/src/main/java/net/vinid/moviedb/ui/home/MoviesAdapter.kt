@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_movies.view.*
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.model.MovieItem
 
@@ -37,7 +38,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         holder.binding.setVariable(BR.data, data)
         holder.binding.executePendingBindings()
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.moviesFavImageView.setOnClickListener {
             onItemClick(data)
         }
     }

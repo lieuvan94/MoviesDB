@@ -9,4 +9,6 @@ interface MovieRepository {
     fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>>
     fun getMovieByGenres(page: Int, genreId: Int): Observable<Resource<List<MovieEntity>>>
     fun getListGenres(): Observable<Resource<List<GenreEntity>>>
+    fun updateMovieStatus(movie: MovieEntity, isLike: Boolean)
+    fun getMoviesLiked(): Observable<Resource<List<MovieEntity>>>
 }

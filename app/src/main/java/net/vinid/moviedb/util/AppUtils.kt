@@ -23,6 +23,7 @@ object AppUtils{
     private const val DB_NAME = "moviedb.realm"
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
+    const val COLUMN_MOVIE_IS_LIKE = "isLike"
     const val COLUMN_GENRE_ID = "id"
 
     const val NETWORK_ERR_MES = "No internet connection. Switching to offline mode"

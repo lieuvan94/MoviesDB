@@ -1,6 +1,7 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -143,6 +144,31 @@ class HomeFragment : BaseFragment() {
         genresAdapter.onItemClick = {
             showMovieByGenre(it)
         }
+
+        popularMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        nowPlayingMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        upComingMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        topRateMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+
+    }
+
+    private fun updateMovieStatus(movieItem: MovieItem){
+        movieItem.changeFavoriteStatus()
+        Log.d("TEST","HomeFragment - status: "+movieItem.favoriteStatus)
+        moviesViewModel.requestUpdateMovieStatus(movieItem.movieEntity, movieItem.favoriteStatus)
+        val rootView = activity as MainActivity
     }
 
     private fun showMovieByGenre(genre: GenreItem) {

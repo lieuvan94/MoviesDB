@@ -3,6 +3,7 @@ package net.vinid.moviedb.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.mapper.toGenreItem
 import net.vinid.moviedb.data.mapper.toMovieItem
 import net.vinid.moviedb.data.model.GenreItem
@@ -50,6 +51,8 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
     private val _genreListMovie = MutableLiveData<ArrayList<MovieItem>>()
     val genreListMovie: LiveData<ArrayList<MovieItem>> get() = _genreListMovie
 
+    private val _listMoviesLiked = MutableLiveData<ArrayList<MovieItem>>()
+    val listMoviesLiked: LiveData<ArrayList<MovieItem>> get() = _listMoviesLiked
 
     fun requestGetMovieByPage(category: String, page: Int) {
         when (category) {
@@ -155,5 +158,18 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                     _errGetData.value = EventWrapper(it)
                 })
         )
+    }
+
+    fun requestUpdateMovieStatus(movie: MovieEntity, isLike: Boolean){
+        movieRepository.updateMovieStatus(movie, isLike)
+    }
+
+    fun requestGetListMoviesLiked(){
+            addToDisposable(
+                movieRepository.getMoviesLiked()
+                     .map { it.data?.toMovieItem() }
+                    .subscribe({
+                        _listMoviesLiked.value = it as ArrayList<MovieItem>
+                    }))
     }
 }

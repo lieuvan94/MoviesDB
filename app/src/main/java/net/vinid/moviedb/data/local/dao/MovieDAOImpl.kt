@@ -84,23 +84,27 @@ class MovieDAOImpl : MovieDAO {
                 }
 
                 realmResult?.listMovie?.addAll(listMovie)
-//                var list = realmResult?.listMovie
-//                Log.d("TEST", "MovieDAOImp: -saveListMovieByGenres - BEfore add - getList: " + realmResult?.listMovie?.size!!)
-//                for (item in list!!) {
-//                    Log.d(
-//                        "TEST",
-//                        "MovieDAOImp - saveListMovieByGenres - getList: " + item.id + ", " + item.title + ", " + item.page
-//                    )
-//                }
-//                realmResult.listMovie.addAll(listMovie)
-//                list = realmResult.listMovie
-//                Log.d("TEST", "MovieDAOImp: -saveListMovieByGenres - After add - getList: " + list.size)
-//                for (item in list) {
-//                    Log.d(
-//                        "TEST",
-//                        "MovieDAOImp - saveListMovieByGenres - getList: " + item.id + ", " + item.title + ", " + item.page
-//                    )
-//                }
             }
+    }
+
+    override fun updateMovieStatus(movieEntity: MovieEntity, isLike: Boolean) {
+        Realm.getInstance(AppUtils.initRealmConfig())
+            .executeTransaction { realm ->
+                val movie: MovieEntity = movieEntity
+                movie.isLike = isLike
+                realm.copyToRealmOrUpdate(movie)
+            }
+    }
+
+    override fun getMoviesLiked(): List<MovieEntity> {
+        val listMovies = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .equalTo(AppUtils.COLUMN_MOVIE_IS_LIKE, true)
+            .findAll()
+        if (!realmResult.isNullOrEmpty()) {
+            listMovies.addAll(realmResult)
+        }
+        return listMovies
     }
 }
