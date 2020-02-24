@@ -1,6 +1,8 @@
 package net.vinid.moviedb.data.remote.api
 
+import android.content.Context
 import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.util.NetworkManager
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,8 +16,8 @@ object APIClient {
     private const val REQUEST_TIMEOUT = 10
     private var okHttpClient: OkHttpClient? = null
 
-    fun getClient(): Retrofit {
-        if (okHttpClient == null) initOkHttp()
+    fun getClient(context: Context): Retrofit {
+        if (okHttpClient == null) initOkHttp(context)
 
         retrofit = Retrofit.Builder()
             .baseUrl(AppUtils.BASE_MOVIE_URL)
@@ -27,7 +29,7 @@ object APIClient {
         return retrofit
     }
 
-    private fun initOkHttp() {
+    private fun initOkHttp(context: Context) {
         val httpClient = OkHttpClient().newBuilder()
             .connectTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .readTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
@@ -36,6 +38,9 @@ object APIClient {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(interceptor)
         httpClient.addInterceptor { chain ->
+            if (!NetworkManager(context).isAvailable){
+                throw ConnectivityInterceptor.NoConnectivityException()
+            }
             val original: Request = chain.request()
             val originalUrl =original.url()
             val url =originalUrl.newBuilder()

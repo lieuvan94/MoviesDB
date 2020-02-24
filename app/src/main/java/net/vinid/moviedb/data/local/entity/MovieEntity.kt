@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey
 
 open class MovieEntity(
     @PrimaryKey
-    var id: Int = 0,
+    var id: String? = null,
     var movieId: Int = 0,
     var posterPath: String? = null,
     var adult: Boolean = false,

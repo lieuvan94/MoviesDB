@@ -3,7 +3,9 @@ package net.vinid.moviedb.util
 
 import io.realm.RealmConfiguration
 import io.realm.RealmList
+import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.remote.respone.GenreResponse
 import net.vinid.moviedb.data.remote.respone.MovieResponse
 
 object AppUtils{
@@ -21,17 +23,31 @@ object AppUtils{
     private const val DB_NAME = "moviedb.realm"
     const val COLUMN_PAGE = "page"
     const val COLUMN_MOVIE_CATEGORY = "category"
+    const val COLUMN_MOVIE_IS_LIKE = "isLike"
+    const val COLUMN_GENRE_ID = "id"
+
+    const val NETWORK_ERR_MES = "No internet connection. Switching to offline mode"
+
+    const val BUNDLE_KEY_GENRE_ITEM = "genre_item"
 
     fun convertMovieResponeToMovieEntity(movieResponse: List<MovieResponse>, category: String, page: Int)
             : List<MovieEntity> {
-        return movieResponse.map { movie ->
+        return movieResponse.map {
+            movie ->
+
             val realmListRenres = RealmList<Int>()
             realmListRenres.addAll(movie.genreIds)
 
-            MovieEntity(0, movie.id, movie.posterPath, movie.adult, movie.overview,
+            MovieEntity(movie.id.toString().plus(category), movie.id, movie.posterPath, movie.adult, movie.overview,
             movie.releaseDate, realmListRenres, movie.originalTitle,
             movie.originalLanguage, movie.title, movie.backdropPath, movie.popularity,
             movie.vote_count, movie.video, movie.vote_average, category, false, page)
+        }
+    }
+
+    fun convertGenresResponeToGenresEntity(movieResponse: List<GenreResponse>): List<GenreEntity> {
+        return movieResponse.map {
+            GenreEntity(it.id, it.name)
         }
     }
 

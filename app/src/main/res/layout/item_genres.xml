@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="net.vinid.moviedb.ui.home.GenresItem" />
+            type="net.vinid.moviedb.data.model.GenreItem" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -33,7 +33,7 @@
                 android:padding="@dimen/padding_4dp"
                 android:lines="1"
                 android:maxLines="1"
-                android:text="@{data.name}"
+                android:text="@{data.genreEntity.name}"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_14sp"
                 app:layout_constraintEnd_toEndOf="parent"

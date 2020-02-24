@@ -1,18 +1,29 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.view_category_movies_list.view.*
+import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.GenreItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
+import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
+import net.vinid.moviedb.ui.genres.GenresAdapter
 import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.util.AppUtils.BUNDLE_KEY_GENRE_ITEM
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -26,10 +37,6 @@ class HomeFragment : BaseFragment() {
         ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
     }
 
-//    private val genresViewModel: GenresViewModel by lazy {
-//        ViewModelProviders.of(this).get(GenresViewModel::class.java)
-//    }
-
     private lateinit var popularMovieAdapter: MoviesAdapter
     private lateinit var upComingMovieAdapter: MoviesAdapter
     private lateinit var topRateMovieAdapter: MoviesAdapter
@@ -37,25 +44,87 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var genresAdapter: GenresAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private val firstPage = 1
+
+    private var popularListState: Int = 0
+    private var upComingListState: Int = 0
+    private var topRateListState: Int = 0
+    private var nowPlayingListState: Int = 0
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         dataBinding.lifecycleOwner = this
-        dataBinding.viewModel = moviesViewModel
 
         initView()
         initViewModel()
-        requestGetMovie()
+        initLoadMore()
+        initSwipeToRefresh()
+
+        moviesViewModel.requestGetListGenres()
 
         return dataBinding.root
     }
 
-    private fun requestGetMovie() {
-        moviesViewModel.requestGetMovieByPage(1)
+    private fun initSwipeToRefresh() {
+        dataBinding.swipeRefresh.setOnRefreshListener {
+            popularMovieAdapter.clearItem()
+            upComingMovieAdapter.clearItem()
+            nowPlayingMovieAdapter.clearItem()
+            topRateMovieAdapter.clearItem()
+
+            includedPopularMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedNowPlayingMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedUpComingMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+            includedTopRateMovieLayout.moviesRecyclerView.clearOnScrollListeners()
+
+            initLoadMore()
+
+            swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun initLoadMore(){
+        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView, AppUtils.MOVIE_POPULAR)
+
+        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_NOW_PLAYING)
+
+        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_UPCOMING)
+
+        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, AppUtils.MOVIE_TOP_RATES)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveListSate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getListState()
+    }
+
+    private fun requestGetMovie(category: String, page: Int) {
+        moviesViewModel.requestGetMovieByPage(category, page)
+    }
+
+    private fun initLoadMore(recyclerView: RecyclerView, category: String){
+        // first load data
+        requestGetMovie(category, firstPage)
+
+        val scrollListener = object : EndlessRecyclerViewScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
+            override fun setLastPosition(view: RecyclerView) {
+                view.scrollToPosition(recyclerView.adapter?.itemCount!!)
+            }
+
+            override fun onLoadMore(
+                page: Int, totalItemsCount: Int, view: RecyclerView?
+            ) {
+                requestGetMovie(category, page)
+            }
+        }
+
+        recyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun initView(){
@@ -72,54 +141,99 @@ class HomeFragment : BaseFragment() {
         genresAdapter = GenresAdapter()
         dataBinding.genresRecyclerView.adapter = this@HomeFragment.genresAdapter
 
+        genresAdapter.onItemClick = {
+            showMovieByGenre(it)
+        }
+
+        popularMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        nowPlayingMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        upComingMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+        topRateMovieAdapter.onItemClick = {
+            updateMovieStatus(it)
+        }
+
+
+    }
+
+    private fun updateMovieStatus(movieItem: MovieItem){
+        movieItem.changeFavoriteStatus()
+        Log.d("TEST","HomeFragment - status: "+movieItem.favoriteStatus)
+        moviesViewModel.requestUpdateMovieStatus(movieItem.movieEntity, movieItem.favoriteStatus)
+        val rootView = activity as MainActivity
+    }
+
+    private fun showMovieByGenre(genre: GenreItem) {
+        val bundle = Bundle()
+        bundle.putSerializable(BUNDLE_KEY_GENRE_ITEM, genre)
+
+        this.findNavController().navigate(
+            R.id.genreScreen, bundle
+        )
     }
 
     private fun initViewModel() {
         moviesViewModel.popularMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, popularMovieAdapter, AppUtils.MOVIE_POPULAR)
+            updateListMovie(it, popularMovieAdapter)
         })
 
         moviesViewModel.upComingMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, upComingMovieAdapter, AppUtils.MOVIE_UPCOMING)
+            updateListMovie(it, upComingMovieAdapter)
         })
 
         moviesViewModel.topRatesMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, topRateMovieAdapter, AppUtils.MOVIE_TOP_RATES)
+            updateListMovie(it, topRateMovieAdapter)
         })
 
         moviesViewModel.nowPlayingMovie.observe(viewLifecycleOwner, Observer {
-            updateMoviesList(it, nowPlayingMovieAdapter, AppUtils.MOVIE_NOW_PLAYING)
+            updateListMovie(it, nowPlayingMovieAdapter)
         })
 
-
-        // handle error
-        moviesViewModel.errorPopular.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
+        moviesViewModel.genres.observe(viewLifecycleOwner, Observer {
+            updateListGenres(it)
         })
 
-        moviesViewModel.errUpComing.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
+        moviesViewModel.errorGetData.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { it ->
+                val rootView = activity as MainActivity
+                rootView.showMes(it.message!!)
+            }
         })
 
-        moviesViewModel.errTopRates.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
-
-        moviesViewModel.errNowPlaying.observe(viewLifecycleOwner, Observer {
-            //Todo Show dialog display error
-        })
-//        genresViewModel.genres.observe(viewLifecycleOwner, Observer {
-//            updateGenresList(it)
-//        })
     }
 
-
-    private fun updateMoviesList(movies: ArrayList<MovieEntity>, adapter: MoviesAdapter, category: String) {
+    private fun updateListMovie(movies: ArrayList<MovieItem>, adapter: MoviesAdapter) {
         adapter.setItems(movies)
     }
 
-    private fun updateGenresList(genres: List<GenresItem>) {
+    private fun updateListGenres(genres: List<GenreItem>) {
         genresAdapter.setItems(genres)
+    }
+
+    private fun saveListSate(){
+        popularListState = (includedPopularMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        upComingListState = (includedUpComingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        topRateListState = (includedTopRateMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        nowPlayingListState = (includedNowPlayingMovieLayout.moviesRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+    }
+
+    private fun getListState(){
+        includedPopularMovieLayout.moviesRecyclerView.scrollToPosition(popularListState)
+        includedUpComingMovieLayout.moviesRecyclerView.scrollToPosition(upComingListState)
+        includedTopRateMovieLayout.moviesRecyclerView.scrollToPosition(topRateListState)
+        includedNowPlayingMovieLayout.moviesRecyclerView.scrollToPosition(nowPlayingListState)
     }
 }
 

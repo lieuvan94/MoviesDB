@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.mapper.toGenreItem
+import net.vinid.moviedb.data.mapper.toMovieItem
+import net.vinid.moviedb.data.model.GenreItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
+import net.vinid.moviedb.ui.common.EventWrapper
 import net.vinid.moviedb.util.AppUtils
 
 /**
@@ -13,85 +18,158 @@ import net.vinid.moviedb.util.AppUtils
  */
 class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewModel() {
 
-    private val _popularMovie = MutableLiveData<ArrayList<MovieEntity>>()
-    val popularMovie: LiveData<ArrayList<MovieEntity>> get() = _popularMovie
+    private val _popularMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val popularMovie: LiveData<ArrayList<MovieItem>> get() = _popularMovie
     val popularMovieVisible = Transformations.map(_popularMovie){
         it.isNotEmpty()
     }
 
-    private val _nowPlayingMovie = MutableLiveData<ArrayList<MovieEntity>>()
-    val nowPlayingMovie: LiveData<ArrayList<MovieEntity>> get() = _nowPlayingMovie
+    private val _nowPlayingMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val nowPlayingMovie: LiveData<ArrayList<MovieItem>> get() = _nowPlayingMovie
     val nowPlayingMovieVisible = Transformations.map(_nowPlayingMovie) {
         it.isNotEmpty()
     }
 
-    private val _topRates = MutableLiveData<ArrayList<MovieEntity>>()
-    val topRatesMovie: LiveData<ArrayList<MovieEntity>> get() = _topRates
+    private val _topRates = MutableLiveData<ArrayList<MovieItem>>()
+    val topRatesMovie: LiveData<ArrayList<MovieItem>> get() = _topRates
     val topRatesMovieVisible = Transformations.map(_topRates) {
         it.isNotEmpty()
     }
 
-    private val _upComing = MutableLiveData<ArrayList<MovieEntity>>()
-    val upComingMovie: LiveData<ArrayList<MovieEntity>> get() = _upComing
+    private val _upComing = MutableLiveData<ArrayList<MovieItem>>()
+    val upComingMovie: LiveData<ArrayList<MovieItem>> get() = _upComing
     val upComingMovieVisible = Transformations.map(_upComing) {
         it.isNotEmpty()
     }
 
-    private val _errPopular = MutableLiveData<Throwable>()
-    val errorPopular: LiveData<Throwable> get() = _errPopular
+    private val _genres = MutableLiveData<ArrayList<GenreItem>>()
+    val genres: LiveData<ArrayList<GenreItem>> get() = _genres
 
-    private val _errNowPlaying = MutableLiveData<Throwable>()
-    val errNowPlaying: LiveData<Throwable> get() = _errNowPlaying
+    private val _errGetData = MutableLiveData<EventWrapper<Throwable>>()
+    val errorGetData: LiveData<EventWrapper<Throwable>> get() = _errGetData
 
-    private val _errTopRates = MutableLiveData<Throwable>()
-    val errTopRates: LiveData<Throwable> get() = _errTopRates
+    private val _genreListMovie = MutableLiveData<ArrayList<MovieItem>>()
+    val genreListMovie: LiveData<ArrayList<MovieItem>> get() = _genreListMovie
 
-    private val _errUpComing = MutableLiveData<Throwable>()
-    val errUpComing: LiveData<Throwable> get() = _errUpComing
+    private val _listMoviesLiked = MutableLiveData<ArrayList<MovieItem>>()
+    val listMoviesLiked: LiveData<ArrayList<MovieItem>> get() = _listMoviesLiked
 
-    fun requestGetMovieByPage(page: Int) {
+    fun requestGetMovieByPage(category: String, page: Int) {
+        when (category) {
+            AppUtils.MOVIE_POPULAR -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _popularMovie.value = ArrayList() }
+                        .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
+                        .subscribe({
+                            _popularMovie.value = it as ArrayList<MovieItem>
+                        }, {
+                            _errGetData.value = EventWrapper(it)
+                        })
+                )
+            }
+
+            AppUtils.MOVIE_TOP_RATES -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _topRates.value = ArrayList() }
+                        .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
+                        .subscribe({
+                            _topRates.value = it as ArrayList<MovieItem>
+                        }, {
+                            _errGetData.value = EventWrapper(it)
+                        })
+
+                )
+            }
+
+            AppUtils.MOVIE_UPCOMING -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _upComing.value = ArrayList() }
+                        .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
+                        .subscribe({
+                            _upComing.value = it as ArrayList<MovieItem>
+                        }, {
+                            _errGetData.value = EventWrapper(it)
+                        })
+                )
+            }
+
+            AppUtils.MOVIE_NOW_PLAYING -> {
+                addToDisposable(
+                    movieRepository.getMovieByCategory(category, page)
+                        .filter { v -> !v.data!!.isEmpty() }
+                        .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
+                        .take(1)
+                        .map {
+                            it.data?.toMovieItem()
+                        }
+                        .subscribe({
+                            _nowPlayingMovie.value = it as ArrayList<MovieItem>
+                        }, {
+                            _errGetData.value = EventWrapper(it)
+                        })
+                )
+            }
+        }
+    }
+
+    fun requestMovieByGenre(page: Int, genreId: Int){
         addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_POPULAR, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_popularMovie.value = ArrayList()}
+            movieRepository.getMovieByGenres(page, genreId)
+                .take(1)
+                .map {
+                    it.data?.toMovieItem()
+                }
                 .subscribe({
-                    _popularMovie.value = it.data!! as ArrayList<MovieEntity>
+                    _genreListMovie.value = it as ArrayList<MovieItem>
                 }, {
-                    _errPopular.value = it
+                    _errGetData.value = EventWrapper(it)
                 })
         )
+    }
 
+    fun requestGetListGenres(){
         addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_NOW_PLAYING, page)
+            movieRepository.getListGenres()
                 .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_nowPlayingMovie.value = ArrayList()}
+                .switchIfEmpty { _genres.value = ArrayList() }
+                .take(1)
+                .map {
+                    it.data?.toGenreItem()
+                }
                 .subscribe({
-                    _nowPlayingMovie.value = it.data!! as ArrayList<MovieEntity>
+                    _genres.value = it as ArrayList<GenreItem>
+
                 }, {
-                    _errNowPlaying.value = it
+                    _errGetData.value = EventWrapper(it)
                 })
         )
+    }
 
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_UPCOMING, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_upComing.value = ArrayList()}
-                .subscribe({
-                    _upComing.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errUpComing.value = it
-                })
-        )
+    fun requestUpdateMovieStatus(movie: MovieEntity, isLike: Boolean){
+        movieRepository.updateMovieStatus(movie, isLike)
+    }
 
-        addToDisposable(
-            movieRepository.getMovieByCategory(AppUtils.MOVIE_TOP_RATES, page)
-                .filter { v -> !v.data!!.isEmpty() }
-                .switchIfEmpty {_topRates.value = ArrayList()}
-                .subscribe({
-                    _topRates.value = it.data!! as ArrayList<MovieEntity>
-                }, {
-                    _errTopRates.value = it
-                })
-        )
+    fun requestGetListMoviesLiked(){
+            addToDisposable(
+                movieRepository.getMoviesLiked()
+                     .map { it.data?.toMovieItem() }
+                    .subscribe({
+                        _listMoviesLiked.value = it as ArrayList<MovieItem>
+                    }))
     }
 }

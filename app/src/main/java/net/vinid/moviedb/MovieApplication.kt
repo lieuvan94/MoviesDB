@@ -35,14 +35,15 @@ class MovieApplication: Application(){
         Realm.init(this)
         Realm.setDefaultConfiguration(AppUtils.initRealmConfig())
 
-        retrofit = APIClient.getClient()
+        retrofit = APIClient.getClient(this)
+
         apiService = APIServiceImpl(retrofit.create(APIService::class.java))
 
         movieDAO = MovieDAOImpl()
 
         networkManager = NetworkManager(applicationContext)
 
-        movieRepository = MovieRepositoryImpl(movieDAO, apiService, networkManager)
+        movieRepository = MovieRepositoryImpl(movieDAO, apiService)
 
         viewModelFactory = ViewModelFactory(movieRepository)
     }

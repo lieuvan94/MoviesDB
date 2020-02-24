@@ -6,16 +6,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_movies.view.*
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.MovieItem
 
 /**
  * Created by Nguyen Van Lieu on 2/3/2020.
  */
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
+    private var dataList: ArrayList<MovieItem> = ArrayList()
 
-    private var dataList: List<MovieEntity> = ArrayList()
-    var onItemClick: (moviesItem: MovieEntity) -> Unit = { _ -> }
+    var onItemClick: (moviesItem: MovieItem) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val layoutId = R.layout.item_movies
@@ -37,19 +38,20 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         holder.binding.setVariable(BR.data, data)
         holder.binding.executePendingBindings()
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.moviesFavImageView.setOnClickListener {
             onItemClick(data)
         }
     }
 
-    fun setItems(movies: List<MovieEntity>) {
-        dataList = movies
-        notifyDataSetChanged()
+    fun setItems(newListMovie: List<MovieItem>) {
+        val lastIndex = dataList.size
+        dataList.addAll(newListMovie)
+        notifyItemInserted(lastIndex)
     }
 
-
-    fun getItem(position: Int): MovieEntity {
-        return dataList[position]
+    fun clearItem(){
+        dataList.clear()
+        notifyDataSetChanged()
     }
 
     class BindingHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
