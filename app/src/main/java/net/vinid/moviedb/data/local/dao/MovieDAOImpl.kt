@@ -92,7 +92,12 @@ class MovieDAOImpl : MovieDAO {
             .executeTransaction { realm ->
                 val movie: MovieEntity = movieEntity
                 movie.isLike = isLike
-                realm.copyToRealmOrUpdate(movie)
+                val realmResult = realm.where(MovieEntity::class.java)
+                    .equalTo(AppUtils.COLUMN_MOVIE_ID, movie.movieId)
+                    .findAll()
+                if (!realmResult.isNullOrEmpty()){
+                    realmResult.setValue(AppUtils.COLUMN_MOVIE_IS_LIKE, isLike)
+                }
             }
     }
 
@@ -102,6 +107,9 @@ class MovieDAOImpl : MovieDAO {
             .where(MovieEntity::class.java)
             .equalTo(AppUtils.COLUMN_MOVIE_IS_LIKE, true)
             .findAll()
+            .distinctBy {
+                it.movieId
+            }
         if (!realmResult.isNullOrEmpty()) {
             listMovies.addAll(realmResult)
         }

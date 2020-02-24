@@ -1,7 +1,6 @@
 package net.vinid.moviedb.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -165,8 +164,10 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun updateMovieStatus(movieItem: MovieItem){
-        movieItem.changeFavoriteStatus()
-        Log.d("TEST","HomeFragment - status: "+movieItem.favoriteStatus)
+        popularMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
+        nowPlayingMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
+        upComingMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
+        topRateMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
         moviesViewModel.requestUpdateMovieStatus(movieItem.movieEntity, movieItem.favoriteStatus)
         val rootView = activity as MainActivity
     }
