@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentSearchByCategoryBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.home.MoviesAdapter
@@ -67,7 +67,7 @@ class SearchMoviesByCategoryFragment: BaseFragment() {
 
         })
     }
-    private fun updateMoviesList(movies: List<MovieEntity>) {
+    private fun updateMoviesList(movies: List<MovieItem>) {
         searchMoviesAdapter.setItems(movies)
     }
 

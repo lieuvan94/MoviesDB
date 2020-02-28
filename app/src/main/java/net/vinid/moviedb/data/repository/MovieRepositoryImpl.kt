@@ -125,7 +125,7 @@ class MovieRepositoryImpl(
     override fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>> {
         return remoteDataSource.searchMoviesByQuery(query,page)
             .map {
-                AppUtils.convertMovieResponeToMovieEntity(it.results)
+                AppUtils.convertMovieResponeToMovieEntity(it.results,"",page)
             }.onErrorResumeNext(
                 Observable.just(localDataSource.searchMoviesByQuery(query))
             )

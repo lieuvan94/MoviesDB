@@ -44,9 +44,13 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
     }
 
     fun setItems(newListMovie: List<MovieItem>) {
-        val lastIndex = dataList.size
+//        val lastIndex = dataList.size
+//        dataList.addAll(newListMovie)
+//        notifyItemInserted(lastIndex)
+
+        dataList.clear()
         dataList.addAll(newListMovie)
-        notifyItemInserted(lastIndex)
+        notifyDataSetChanged()
     }
 
     fun clearItem(){

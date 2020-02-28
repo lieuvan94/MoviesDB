@@ -19,4 +19,8 @@ class APIServiceImpl (
     override fun getListGenres(): Observable<ListGenresResponse> {
         return apiManager.getListGenres()
     }
+
+    override fun searchMoviesByQuery(query: String, page: Int): Observable<ListMovieResponse> {
+        return apiManager.searchMoviesByQuery(query,page)
+    }
 }

@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.data.mapper.toMovieItem
+import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
 
@@ -14,8 +15,8 @@ import net.vinid.moviedb.ui.base.BaseViewModel
  */
 class SearchMoviesViewModel(private val movieRepository: MovieRepository) : BaseViewModel() {
 
-    private val _searchMovies = MutableLiveData<List<MovieEntity>>()
-    val searchMovies: LiveData<List<MovieEntity>>
+    private val _searchMovies = MutableLiveData<List<MovieItem>>()
+    val searchMovies: LiveData<List<MovieItem>>
         get() = _searchMovies
 
     val listMoviesVisible = Transformations.map(_searchMovies) {
@@ -34,7 +35,7 @@ class SearchMoviesViewModel(private val movieRepository: MovieRepository) : Base
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        _searchMovies.value = it
+                        _searchMovies.value = it.toMovieItem()
                     },{
                         _errSearchMovies.value =it
                     })
