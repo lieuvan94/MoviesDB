@@ -5,16 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentFavoritesBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.home.MoviesAdapter
-import net.vinid.moviedb.ui.home.MoviesViewModel
 import javax.inject.Inject
 
 /**
@@ -24,10 +21,10 @@ class FavoritesFragment : BaseFragment() {
 
     private lateinit var dataBinding: FragmentFavoritesBinding
     private var favoriteMovieAdapter: MoviesAdapter? = null
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val moviesViewModel by viewModels<MoviesViewModel> { viewModelFactory }
+    @Inject
+    lateinit var favoriteViewModel: FavoriteViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,9 +41,9 @@ class FavoritesFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        moviesViewModel.requestGetListMoviesLiked()
+        favoriteViewModel.requestGetListMoviesLiked()
 
-        moviesViewModel.listMoviesLiked.observe(viewLifecycleOwner, Observer {
+        favoriteViewModel.listMoviesLiked.observe(viewLifecycleOwner, Observer {
             updateListMovie(it)
         })
 

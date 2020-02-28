@@ -52,11 +52,7 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
     private val _errGetData = MutableLiveData<EventWrapper<Throwable>>()
     val errorGetData: LiveData<EventWrapper<Throwable>> get() = _errGetData
 
-    private val _genreListMovie = MutableLiveData<ArrayList<MovieItem>>()
-    val genreListMovie: LiveData<ArrayList<MovieItem>> get() = _genreListMovie
 
-    private val _listMoviesLiked = MutableLiveData<ArrayList<MovieItem>>()
-    val listMoviesLiked: LiveData<ArrayList<MovieItem>> get() = _listMoviesLiked
 
     fun requestGetMovieByPage(category: String, page: Int) {
         when (category) {
@@ -131,21 +127,6 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
         }
     }
 
-    fun requestMovieByGenre(page: Int, genreId: Int){
-        addToDisposable(
-            movieRepository.getMovieByGenres(page, genreId)
-                .take(1)
-                .map {
-                    it.data?.toMovieItem()
-                }
-                .subscribe({
-                    _genreListMovie.value = it as ArrayList<MovieItem>
-                }, {
-                    _errGetData.value = EventWrapper(it)
-                })
-        )
-    }
-
     fun requestGetListGenres(){
         addToDisposable(
             movieRepository.getListGenres()
@@ -166,15 +147,5 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
 
     fun requestUpdateMovieStatus(movie: MovieEntity, isLike: Boolean){
         movieRepository.updateMovieStatus(movie, isLike)
-    }
-
-    fun requestGetListMoviesLiked() {
-        addToDisposable(
-            movieRepository.getMoviesLiked()
-                .map { it.data?.toMovieItem() }
-                .subscribe({
-                    _listMoviesLiked.value = it as ArrayList<MovieItem>
-                })
-        )
     }
 }

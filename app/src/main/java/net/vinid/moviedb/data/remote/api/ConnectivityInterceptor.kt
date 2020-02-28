@@ -7,8 +7,9 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class ConnectivityInterceptor(private val context: Context) : Interceptor {
+class ConnectivityInterceptor @Inject constructor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!NetworkManager(context).isAvailable){
             throw NoConnectivityException()

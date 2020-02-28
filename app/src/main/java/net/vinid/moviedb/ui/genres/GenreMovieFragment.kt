@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.MainActivity
@@ -19,7 +17,6 @@ import net.vinid.moviedb.databinding.FragmentGenreMovieBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
 import net.vinid.moviedb.ui.home.MoviesAdapter
-import net.vinid.moviedb.ui.home.MoviesViewModel
 import net.vinid.moviedb.utils.ConstStrings.Companion.BUNDLE_KEY_GENRE_ITEM
 import javax.inject.Inject
 
@@ -30,9 +27,7 @@ class GenreMovieFragment : BaseFragment() {
     private var genreMovieAdapter: MoviesAdapter? = null
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val moviesViewModel by viewModels<MoviesViewModel> { viewModelFactory }
+    lateinit var genreViewModel: GenreViewModel
 
     private val firstPage = 1
 
@@ -53,7 +48,7 @@ class GenreMovieFragment : BaseFragment() {
     }
 
     private fun initLoadMore() {
-        moviesViewModel.requestMovieByGenre(firstPage, genre!!.genreEntity.id)
+        genreViewModel.requestMovieByGenre(firstPage, genre!!.genreEntity.id)
 
         val scrollListener = object : EndlessRecyclerViewScrollListener(dataBinding.genreMovieRcv.layoutManager
                 as GridLayoutManager){
@@ -62,7 +57,7 @@ class GenreMovieFragment : BaseFragment() {
             }
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                moviesViewModel.requestMovieByGenre(page, genre!!.genreEntity.id)
+                genreViewModel.requestMovieByGenre(page, genre!!.genreEntity.id)
             }
 
         }
@@ -84,7 +79,7 @@ class GenreMovieFragment : BaseFragment() {
 
     private fun initViewModel() {
 
-        moviesViewModel.genreListMovie.observe(viewLifecycleOwner, Observer {
+        genreViewModel.genreListMovie.observe(viewLifecycleOwner, Observer {
             updateListMovie(it)
         })
 

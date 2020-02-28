@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,10 +32,9 @@ import javax.inject.Inject
 class HomeFragment : BaseFragment() {
     private lateinit var dataBinding: FragmentHomeBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val moviesViewModel by viewModels<MoviesViewModel> { viewModelFactory }
+    @Inject
+    lateinit var moviesViewModel: MoviesViewModel
 
     private lateinit var popularMovieAdapter: MoviesAdapter
     private lateinit var upComingMovieAdapter: MoviesAdapter

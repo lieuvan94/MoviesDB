@@ -7,6 +7,7 @@ import io.realm.Realm
 import net.vinid.moviedb.data.local.dao.MovieDAO
 import net.vinid.moviedb.data.local.dao.MovieDAOImpl
 import net.vinid.moviedb.data.remote.api.APIService
+import net.vinid.moviedb.data.remote.api.ConnectivityInterceptor
 import net.vinid.moviedb.data.remote.api.RequestInterceptor
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.data.repository.MovieRepositoryImpl
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule {
+class DataModule {
     @Provides
     @Singleton
     fun provideMovieLocalDataSource(movieDAOImpl: MovieDAOImpl): MovieDAO{
@@ -35,12 +36,13 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(context: Context): OkHttpClient {
         return OkHttpClient().newBuilder()
             .connectTimeout(ConstStrings.REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .readTimeout(ConstStrings.REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(ConstStrings.REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .addInterceptor(RequestInterceptor())
+            .addInterceptor(ConnectivityInterceptor(context))
             .build()
     }
 

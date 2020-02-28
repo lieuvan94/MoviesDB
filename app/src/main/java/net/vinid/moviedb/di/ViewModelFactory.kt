@@ -2,8 +2,6 @@ package net.vinid.moviedb.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.Module
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -30,9 +28,4 @@ class ViewModelFactory @Inject constructor(
             throw RuntimeException(e)
         }
     }
-}
-@Module
-internal abstract class ViewModelBuilder {
-    @Binds
-    internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

@@ -10,12 +10,9 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
-    ApplicationModule::class,
+    DataModule::class,
     AndroidInjectionModule::class,
-    MovieModule::class,
-    GenreModule::class,
-    FavoriteModule::class,
-    MovieSearchModule::class])
+    UIModule::class])
 interface AppComponent : AndroidInjector<MovieApplication>{
 
     @Component.Factory
