@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_category_movies_list.view.*
 import net.vinid.moviedb.MainActivity
-import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.model.GenreItem
 import net.vinid.moviedb.data.model.MovieItem
@@ -21,8 +21,12 @@ import net.vinid.moviedb.databinding.FragmentHomeBinding
 import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
 import net.vinid.moviedb.ui.genres.GenresAdapter
-import net.vinid.moviedb.util.AppUtils
-import net.vinid.moviedb.util.AppUtils.BUNDLE_KEY_GENRE_ITEM
+import net.vinid.moviedb.utils.ConstStrings.Companion.BUNDLE_KEY_GENRE_ITEM
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_NOW_PLAYING
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_POPULAR
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_TOP_RATES
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_UPCOMING
+import javax.inject.Inject
 
 /**
  * Created by Nguyen Van Lieu on 2/1/2020.
@@ -30,11 +34,10 @@ import net.vinid.moviedb.util.AppUtils.BUNDLE_KEY_GENRE_ITEM
 class HomeFragment : BaseFragment() {
     private lateinit var dataBinding: FragmentHomeBinding
 
-    private val viewModelFactory = MovieApplication.injectViewModelFactory()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val moviesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
-    }
+    private val moviesViewModel by viewModels<MoviesViewModel> { viewModelFactory }
 
     private lateinit var popularMovieAdapter: MoviesAdapter
     private lateinit var upComingMovieAdapter: MoviesAdapter
@@ -84,13 +87,13 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initLoadMore(){
-        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView, AppUtils.MOVIE_POPULAR)
+        initLoadMore(dataBinding.includedPopularMovieLayout.moviesRecyclerView, MOVIE_POPULAR)
 
-        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_NOW_PLAYING)
+        initLoadMore(dataBinding.includedNowPlayingMovieLayout.moviesRecyclerView, MOVIE_NOW_PLAYING)
 
-        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, AppUtils.MOVIE_UPCOMING)
+        initLoadMore(dataBinding.includedUpComingMovieLayout.moviesRecyclerView, MOVIE_UPCOMING)
 
-        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, AppUtils.MOVIE_TOP_RATES)
+        initLoadMore(dataBinding.includedTopRateMovieLayout.moviesRecyclerView, MOVIE_TOP_RATES)
     }
 
     override fun onPause() {

@@ -4,19 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.data.mapper.toGenreItem
-import net.vinid.moviedb.data.mapper.toMovieItem
+import net.vinid.moviedb.mapper.toGenreItem
+import net.vinid.moviedb.mapper.toMovieItem
 import net.vinid.moviedb.data.model.GenreItem
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.ui.base.BaseViewModel
 import net.vinid.moviedb.ui.common.EventWrapper
-import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_NOW_PLAYING
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_POPULAR
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_TOP_RATES
+import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_UPCOMING
+import javax.inject.Inject
 
 /**
  * Created by Nguyen Van Lieu on 2/4/2020.
  */
-class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewModel() {
+class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieItem>>()
     val popularMovie: LiveData<ArrayList<MovieItem>> get() = _popularMovie
@@ -56,7 +60,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
 
     fun requestGetMovieByPage(category: String, page: Int) {
         when (category) {
-            AppUtils.MOVIE_POPULAR -> {
+            MOVIE_POPULAR -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
                         .filter { v -> !v.data!!.isEmpty() }
@@ -73,7 +77,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 )
             }
 
-            AppUtils.MOVIE_TOP_RATES -> {
+            MOVIE_TOP_RATES -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
                         .filter { v -> !v.data!!.isEmpty() }
@@ -91,7 +95,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 )
             }
 
-            AppUtils.MOVIE_UPCOMING -> {
+            MOVIE_UPCOMING -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
                         .filter { v -> !v.data!!.isEmpty() }
@@ -108,7 +112,7 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
                 )
             }
 
-            AppUtils.MOVIE_NOW_PLAYING -> {
+            MOVIE_NOW_PLAYING -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
                         .filter { v -> !v.data!!.isEmpty() }
@@ -164,12 +168,13 @@ class MoviesViewModel (private val movieRepository: MovieRepository) : BaseViewM
         movieRepository.updateMovieStatus(movie, isLike)
     }
 
-    fun requestGetListMoviesLiked(){
-            addToDisposable(
-                movieRepository.getMoviesLiked()
-                     .map { it.data?.toMovieItem() }
-                    .subscribe({
-                        _listMoviesLiked.value = it as ArrayList<MovieItem>
-                    }))
+    fun requestGetListMoviesLiked() {
+        addToDisposable(
+            movieRepository.getMoviesLiked()
+                .map { it.data?.toMovieItem() }
+                .subscribe({
+                    _listMoviesLiked.value = it as ArrayList<MovieItem>
+                })
+        )
     }
 }

@@ -4,15 +4,17 @@ import io.realm.Realm
 import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.utils.ConfigUtils
+import net.vinid.moviedb.utils.ConstStrings
+import javax.inject.Inject
 
-class MovieDAOImpl : MovieDAO {
+class MovieDAOImpl @Inject constructor(private val realm: Realm) : MovieDAO {
     override fun getMoviesByPageAndCategory(page: Int, category: String): List<MovieEntity>{
         val listMovie = ArrayList<MovieEntity>()
-        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+        val realmResult = realm
             .where(MovieEntity::class.java)
-            .equalTo(AppUtils.COLUMN_PAGE, page)
-            .equalTo(AppUtils.COLUMN_MOVIE_CATEGORY, category)
+            .equalTo(ConstStrings.COLUMN_PAGE, page)
+            .equalTo(ConstStrings.COLUMN_MOVIE_CATEGORY, category)
             .findAll()
         if (!realmResult.isNullOrEmpty()) {
             listMovie.addAll(realmResult)
@@ -22,9 +24,9 @@ class MovieDAOImpl : MovieDAO {
 
     override fun getMoviesByGenre(page: Int, genre: Int): List<MovieEntity> {
         val listMovieByGenre = ArrayList<MovieEntity>()
-        val listMovie = Realm.getInstance(AppUtils.initRealmConfig())
+        val listMovie = realm
             .where(GenreEntity::class.java)
-            .equalTo(AppUtils.COLUMN_GENRE_ID,genre)
+            .equalTo(ConstStrings.COLUMN_GENRE_ID,genre)
             .findFirst()?.listMovie
 
         for (item in listMovie!!){
@@ -38,7 +40,7 @@ class MovieDAOImpl : MovieDAO {
 
     override fun getListGenres(): List<GenreEntity> {
         val listGenres = ArrayList<GenreEntity>()
-        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+        val realmResult = realm
             .where(GenreEntity::class.java)
             .findAll()
         if (!realmResult.isNullOrEmpty()) {
@@ -48,7 +50,7 @@ class MovieDAOImpl : MovieDAO {
     }
 
     override fun saveListMovie(listMovie: List<MovieEntity>, category: String, page: Int) {
-        Realm.getInstance(AppUtils.initRealmConfig())
+        Realm.getInstance(ConfigUtils.initRealmConfig())
             .executeTransactionAsync { realm ->
                 for (movie in listMovie){
                     // save movie to db
@@ -58,7 +60,7 @@ class MovieDAOImpl : MovieDAO {
     }
 
     override fun saveListGenres(listGenres: List<GenreEntity>) {
-        Realm.getInstance(AppUtils.initRealmConfig())
+        Realm.getInstance(ConfigUtils.initRealmConfig())
             .executeTransactionAsync { realm ->
                 for (genre in listGenres){
                     // save movie to db
@@ -68,11 +70,11 @@ class MovieDAOImpl : MovieDAO {
     }
 
     override fun saveListMovieByGenres(genreId: Int, page: Int, listMovie: RealmList<MovieEntity>) {
-        Realm.getInstance(AppUtils.initRealmConfig())
+        Realm.getInstance(ConfigUtils.initRealmConfig())
             .executeTransactionAsync{ realm ->
                 val realmResult = realm
                     .where(GenreEntity::class.java)
-                    .equalTo(AppUtils.COLUMN_GENRE_ID, genreId)
+                    .equalTo(ConstStrings.COLUMN_GENRE_ID, genreId)
                     .findFirst()
 
                 if (!realmResult?.listMovie.isNullOrEmpty()){
@@ -88,24 +90,23 @@ class MovieDAOImpl : MovieDAO {
     }
 
     override fun updateMovieStatus(movieEntity: MovieEntity, isLike: Boolean) {
-        Realm.getInstance(AppUtils.initRealmConfig())
-            .executeTransaction { realm ->
-                val movie: MovieEntity = movieEntity
-                movie.isLike = isLike
-                val realmResult = realm.where(MovieEntity::class.java)
-                    .equalTo(AppUtils.COLUMN_MOVIE_ID, movie.movieId)
-                    .findAll()
-                if (!realmResult.isNullOrEmpty()){
-                    realmResult.setValue(AppUtils.COLUMN_MOVIE_IS_LIKE, isLike)
-                }
+        realm.executeTransaction { realm ->
+            val movie: MovieEntity = movieEntity
+            movie.isLike = isLike
+            val realmResult = realm.where(MovieEntity::class.java)
+                .equalTo(ConstStrings.COLUMN_MOVIE_ID, movie.movieId)
+                .findAll()
+            if (!realmResult.isNullOrEmpty()) {
+                realmResult.setValue(ConstStrings.COLUMN_MOVIE_IS_LIKE, isLike)
             }
+        }
     }
 
     override fun getMoviesLiked(): List<MovieEntity> {
         val listMovies = ArrayList<MovieEntity>()
-        val realmResult = Realm.getInstance(AppUtils.initRealmConfig())
+        val realmResult = realm
             .where(MovieEntity::class.java)
-            .equalTo(AppUtils.COLUMN_MOVIE_IS_LIKE, true)
+            .equalTo(ConstStrings.COLUMN_MOVIE_IS_LIKE, true)
             .findAll()
             .distinctBy {
                 it.movieId

@@ -6,31 +6,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.MainActivity
-import net.vinid.moviedb.MovieApplication
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.model.GenreItem
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.databinding.FragmentGenreMovieBinding
+import net.vinid.moviedb.ui.base.BaseFragment
 import net.vinid.moviedb.ui.common.recycleview.EndlessRecyclerViewScrollListener
 import net.vinid.moviedb.ui.home.MoviesAdapter
 import net.vinid.moviedb.ui.home.MoviesViewModel
-import net.vinid.moviedb.util.AppUtils
+import net.vinid.moviedb.utils.ConstStrings.Companion.BUNDLE_KEY_GENRE_ITEM
+import javax.inject.Inject
 
 
-class GenreMovieFragment : Fragment() {
+class GenreMovieFragment : BaseFragment() {
     private lateinit var dataBinding: FragmentGenreMovieBinding
     private var genre: GenreItem? = null
     private var genreMovieAdapter: MoviesAdapter? = null
-    private val viewModelFactory = MovieApplication.injectViewModelFactory()
-    private val moviesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
-    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val moviesViewModel by viewModels<MoviesViewModel> { viewModelFactory }
+
     private val firstPage = 1
 
     override fun onCreateView(
@@ -69,7 +72,7 @@ class GenreMovieFragment : Fragment() {
 
     private fun initGenre(){
         arguments?.let {
-            genre = it.getSerializable(AppUtils.BUNDLE_KEY_GENRE_ITEM) as GenreItem?
+            genre = it.getSerializable(BUNDLE_KEY_GENRE_ITEM) as GenreItem?
         }
     }
 

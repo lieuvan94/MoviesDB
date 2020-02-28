@@ -22,7 +22,4 @@ data class MovieItem (
         favoriteStatus = favoriteStatus.not()
     }
 
-    fun isFavoriteVisible(): Boolean{
-        return movieEntity.isLike
-    }
 }

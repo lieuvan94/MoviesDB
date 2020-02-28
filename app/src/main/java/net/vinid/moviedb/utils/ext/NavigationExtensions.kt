@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.vinid.moviedb.util.ext
+package net.vinid.moviedb.utils.ext
 
 import android.content.Intent
 import android.util.SparseArray

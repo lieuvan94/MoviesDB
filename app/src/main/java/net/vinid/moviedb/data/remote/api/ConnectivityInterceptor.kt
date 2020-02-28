@@ -1,8 +1,8 @@
 package net.vinid.moviedb.data.remote.api
 
 import android.content.Context
-import net.vinid.moviedb.util.AppUtils.NETWORK_ERR_MES
-import net.vinid.moviedb.util.NetworkManager
+import net.vinid.moviedb.utils.ConstStrings.Companion.NETWORK_ERR_MES
+import net.vinid.moviedb.utils.NetworkManager
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

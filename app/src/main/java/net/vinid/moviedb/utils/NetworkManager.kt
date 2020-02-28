@@ -1,4 +1,4 @@
-package net.vinid.moviedb.util
+package net.vinid.moviedb.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

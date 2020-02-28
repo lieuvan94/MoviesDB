@@ -6,24 +6,25 @@ import io.realm.RealmList
 import net.vinid.moviedb.data.local.dao.MovieDAO
 import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
+import net.vinid.moviedb.mapper.toGenreEntity
+import net.vinid.moviedb.mapper.toMovieEntity
 import net.vinid.moviedb.data.remote.api.APIService
 import net.vinid.moviedb.data.remote.api.NetworkBoundResource
 import net.vinid.moviedb.data.remote.api.Resource
 import net.vinid.moviedb.data.remote.respone.ListGenresResponse
 import net.vinid.moviedb.data.remote.respone.ListMovieResponse
-import net.vinid.moviedb.util.AppUtils
+import javax.inject.Inject
 
-class MovieRepositoryImpl(
-    private val localDataSource: MovieDAO,
-    private val remoteDataSource: APIService
+class MovieRepositoryImpl @Inject constructor(
+     private val localDataSource: MovieDAO,
+     private val remoteDataSource: APIService
 ) : MovieRepository {
 
     override fun getMovieByCategory(category: String, page: Int): Observable<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>() {
             // save data from remote to local
             override fun saveCallResult(item: ListMovieResponse) {
-                val listMovieEntity = AppUtils
-                    .convertMovieResponeToMovieEntity(item.results, category, page)
+                val listMovieEntity = item.results.toMovieEntity(category, page)
                 localDataSource.saveListMovie(listMovieEntity, category, page)
             }
 
@@ -43,26 +44,25 @@ class MovieRepositoryImpl(
 
             override fun convertRequestTypeToResultType(requestType: Resource<ListMovieResponse>)
                     : Resource<List<MovieEntity>> {
-                val listMovieEntity = AppUtils
-                    .convertMovieResponeToMovieEntity(requestType.data?.results!!, category, page)
+                val listMovieEntity = requestType.data?.results!!
+                    .toMovieEntity(category, page)
+
                 return Resource.success(listMovieEntity)
             }
 
         }.getResource()
     }
 
-    //Todo: Get movie specification genre
     override fun getMovieByGenres(page: Int, genreId: Int): Observable<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, ListMovieResponse>(){
             override fun convertRequestTypeToResultType(requestType: Resource<ListMovieResponse>): Resource<List<MovieEntity>> {
-                val listMovieEntity = AppUtils
-                    .convertMovieResponeToMovieEntity(requestType.data?.results!!, "", page)
+                val listMovieEntity = requestType.data?.results!!
+                    .toMovieEntity("", page)
                 return Resource.success(listMovieEntity)
             }
 
             override fun saveCallResult(item: ListMovieResponse) {
-                val listMovieEntity = AppUtils
-                    .convertMovieResponeToMovieEntity(item.results, "", page)
+                val listMovieEntity = item.results.toMovieEntity("", page)
 
                 val realmList = RealmList<MovieEntity>()
                 realmList.addAll(listMovieEntity)
@@ -89,13 +89,12 @@ class MovieRepositoryImpl(
         return object : NetworkBoundResource<List<GenreEntity>, ListGenresResponse>(){
             override fun convertRequestTypeToResultType(requestType: Resource<ListGenresResponse>)
                     : Resource<List<GenreEntity>> {
-                val listGenres= AppUtils
-                    .convertGenresResponeToGenresEntity(requestType.data?.listGenres!!)
+                val listGenres= requestType.data?.listGenres!!.toGenreEntity()
                 return Resource.success(listGenres)
             }
 
             override fun saveCallResult(item: ListGenresResponse) {
-                val listGenres = AppUtils.convertGenresResponeToGenresEntity(item.listGenres)
+                val listGenres = item.listGenres.toGenreEntity()
                 localDataSource.saveListGenres(listGenres)
             }
 
