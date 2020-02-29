@@ -120,4 +120,13 @@ class MovieRepositoryImpl @Inject constructor(
     override fun getMoviesLiked(): Observable<Resource<List<MovieEntity>>> {
         return Observable.just(Resource.success(localDataSource.getMoviesLiked()))
     }
+
+    override fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>> {
+        return remoteDataSource.searchMoviesByQuery(query,page)
+            .map {
+                it.results.toMovieEntity("",page)
+            }.onErrorResumeNext(
+                Observable.just(localDataSource.searchMoviesByQuery(query))
+            )
+    }
 }

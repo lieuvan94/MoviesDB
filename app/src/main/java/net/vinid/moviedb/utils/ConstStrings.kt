@@ -23,5 +23,10 @@ class ConstStrings {
         const val BUNDLE_KEY_GENRE_ITEM = "genre_item"
 
         const val REQUEST_TIMEOUT = 10
+
+        const val COLUMN_MOVIE_TITLE = "title"
+        const val COLUMN_RECYCLEVIEW = 3
+        const val QUERY_PAGE = 1
+        const val REQUEST_DELAY = 500L
     }
 }
