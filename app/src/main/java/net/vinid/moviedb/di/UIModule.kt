@@ -9,7 +9,8 @@ import javax.inject.Provider
 @Module(includes = [
     MovieModule::class,
     GenreModule::class,
-    FavoriteModule::class
+    FavoriteModule::class,
+    SearchMovieModule::class
 ])
 class UIModule {
     @Provides

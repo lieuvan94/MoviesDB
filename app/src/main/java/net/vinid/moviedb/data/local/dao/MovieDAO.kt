@@ -13,4 +13,6 @@ interface MovieDAO {
     fun saveListMovieByGenres(genreId: Int, page: Int, listMovie: RealmList<MovieEntity>)
     fun updateMovieStatus(movieEntity: MovieEntity, isLike: Boolean)
     fun getMoviesLiked(): List<MovieEntity>
+    fun getMoviesByPage(page: Int): List<MovieEntity>
+    fun searchMoviesByQuery(query :String): List<MovieEntity>
 }

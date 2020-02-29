@@ -11,4 +11,5 @@ interface MovieRepository {
     fun getListGenres(): Observable<Resource<List<GenreEntity>>>
     fun updateMovieStatus(movie: MovieEntity, isLike: Boolean)
     fun getMoviesLiked(): Observable<Resource<List<MovieEntity>>>
+    fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>>
 }
