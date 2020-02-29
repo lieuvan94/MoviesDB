@@ -2,6 +2,7 @@ package net.vinid.moviedb.ui.favorites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import net.vinid.moviedb.data.local.entity.MovieEntity
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.mapper.toMovieItem
@@ -20,5 +21,9 @@ class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRe
                     _listMoviesLiked.value = it as ArrayList<MovieItem>
                 })
         )
+    }
+
+    fun requestUpdateMovieStatus(movie: MovieEntity, isLike: Boolean){
+        movieRepository.updateMovieStatus(movie, isLike)
     }
 }

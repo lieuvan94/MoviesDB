@@ -159,8 +159,6 @@ class HomeFragment : BaseFragment() {
         topRateMovieAdapter.onItemClick = {
             updateMovieStatus(it)
         }
-
-
     }
 
     private fun updateMovieStatus(movieItem: MovieItem){
@@ -168,8 +166,8 @@ class HomeFragment : BaseFragment() {
         nowPlayingMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
         upComingMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
         topRateMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
+
         moviesViewModel.requestUpdateMovieStatus(movieItem.movieEntity, movieItem.favoriteStatus)
-        val rootView = activity as MainActivity
     }
 
     private fun showMovieByGenre(genre: GenreItem) {

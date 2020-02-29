@@ -54,6 +54,11 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
         notifyDataSetChanged()
     }
 
+    fun removeItem(item: MovieItem){
+        dataList.remove(item)
+        notifyDataSetChanged()
+    }
+
     fun changeMovieFavoriteStatus(movieId: Int){
         for (item in dataList){
             if (item.movieEntity.movieId.equals(movieId)){

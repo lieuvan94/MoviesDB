@@ -36,8 +36,17 @@ class FavoritesFragment : BaseFragment() {
 
         initToolbar()
         initViewModel()
+        handleOnClick()
 
         return dataBinding.root
+    }
+
+    private fun handleOnClick() {
+        favoriteMovieAdapter?.onItemClick = {
+            favoriteMovieAdapter?.changeMovieFavoriteStatus(it.movieEntity.movieId)
+            favoriteViewModel.requestUpdateMovieStatus(it.movieEntity, it.favoriteStatus)
+            favoriteMovieAdapter?.removeItem(it)
+        }
     }
 
     private fun initViewModel() {
