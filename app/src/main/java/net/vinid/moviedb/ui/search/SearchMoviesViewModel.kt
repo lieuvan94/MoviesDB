@@ -9,11 +9,14 @@ import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.mapper.toMovieItem
 import net.vinid.moviedb.ui.base.BaseViewModel
+import javax.inject.Inject
 
 /**
  * Created by Nguyen Van Lieu on 2/13/2020.
  */
-class SearchMoviesViewModel(private val movieRepository: MovieRepository) : BaseViewModel() {
+class SearchMoviesViewModel @Inject constructor(
+    private val movieRepository: MovieRepository
+) : BaseViewModel() {
 
     private val _searchMovies = MutableLiveData<List<MovieItem>>()
     val searchMovies: LiveData<List<MovieItem>>

@@ -19,7 +19,7 @@ import net.vinid.moviedb.ui.search.SearchMoviesViewModel
 abstract class SearchMovieModule {
 
     @ContributesAndroidInjector(modules = [
-        InjectSearchMovieModule::class
+        InjectSearchMoviesViewModel::class
     ])
 
     internal abstract fun bindSearchFragment(): SearchFragment
@@ -36,7 +36,7 @@ abstract class SearchMovieModule {
     }
 
     @Module
-    class InjectSearchMovieModule{
+    class InjectSearchMoviesViewModel{
 
         @Provides
         fun provideSearchMoviesViewModel(factory: ViewModelProvider.Factory, fragment: SearchByMoviesNameFragment):
