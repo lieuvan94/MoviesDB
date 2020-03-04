@@ -3,18 +3,18 @@ package net.vinid.moviedb.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
-import net.vinid.moviedb.mapper.toMovieItem
+import net.vinid.moviedb.data.mapper.toMovieItem
 import net.vinid.moviedb.ui.base.BaseViewModel
+import net.vinid.moviedb.utils.rx.SchedulerProvider
 import javax.inject.Inject
 
 /**
  * Created by Nguyen Van Lieu on 2/13/2020.
  */
 class SearchMoviesViewModel @Inject constructor(
+    private val schedulerProvider: SchedulerProvider,
     private val movieRepository: MovieRepository
 ) : BaseViewModel() {
 
@@ -35,8 +35,8 @@ class SearchMoviesViewModel @Inject constructor(
         }else{
             addToDisposable(
                 movieRepository.searchMoviesByQuery(query,page)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
                     .subscribe({
                         _searchMovies.value = it.toMovieItem()
                     },{

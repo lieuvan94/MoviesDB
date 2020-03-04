@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.mapper.toGenreItem
-import net.vinid.moviedb.mapper.toMovieItem
+import net.vinid.moviedb.data.mapper.toGenreItem
+import net.vinid.moviedb.data.mapper.toMovieItem
 import net.vinid.moviedb.data.model.GenreItem
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
@@ -20,7 +20,9 @@ import javax.inject.Inject
 /**
  * Created by Nguyen Van Lieu on 2/4/2020.
  */
-class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
+class MoviesViewModel @Inject constructor(
+    private val movieRepository: MovieRepository
+) : BaseViewModel() {
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieItem>>()
     val popularMovie: LiveData<ArrayList<MovieItem>> get() = _popularMovie
