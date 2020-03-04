@@ -30,8 +30,8 @@ import javax.inject.Inject
  * Created by Nguyen Van Lieu on 2/1/2020.
  */
 class HomeFragment : BaseFragment() {
-    private lateinit var dataBinding: FragmentHomeBinding
 
+    private lateinit var dataBinding: FragmentHomeBinding
 
     @Inject
     lateinit var moviesViewModel: MoviesViewModel
@@ -40,7 +40,6 @@ class HomeFragment : BaseFragment() {
     private lateinit var upComingMovieAdapter: MoviesAdapter
     private lateinit var topRateMovieAdapter: MoviesAdapter
     private lateinit var nowPlayingMovieAdapter: MoviesAdapter
-
     private lateinit var genresAdapter: GenresAdapter
 
     private val firstPage = 1

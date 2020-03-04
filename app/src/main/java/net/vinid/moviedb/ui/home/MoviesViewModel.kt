@@ -20,7 +20,9 @@ import javax.inject.Inject
 /**
  * Created by Nguyen Van Lieu on 2/4/2020.
  */
-class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
+class MoviesViewModel @Inject constructor(
+    private val movieRepository: MovieRepository
+) : BaseViewModel() {
 
     private val _popularMovie = MutableLiveData<ArrayList<MovieItem>>()
     val popularMovie: LiveData<ArrayList<MovieItem>> get() = _popularMovie

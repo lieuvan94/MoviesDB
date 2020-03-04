@@ -21,8 +21,8 @@ class SearchMoviesByGenresFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dataBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_search_by_genres, container, false)
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_by_genres
+            , container, false)
         dataBinding.lifecycleOwner = this
 
         return dataBinding.root
