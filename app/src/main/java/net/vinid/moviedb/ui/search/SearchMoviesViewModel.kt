@@ -34,7 +34,11 @@ class SearchMoviesViewModel @Inject constructor(
             _searchMovies.value = ArrayList()
         }else{
             addToDisposable(
-                movieRepository.searchMoviesByQuery(query,page)
+                Observable.just(query)
+                .flatMap{ 
+                    if(it.isEmpty) Observable.just( emptyList()) else movieRepository.searchMoviesByQuery(it, page)
+                }
+.
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
                     .subscribe({
