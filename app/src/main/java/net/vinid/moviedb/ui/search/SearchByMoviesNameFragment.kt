@@ -31,7 +31,7 @@ class SearchByMoviesNameFragment : BaseFragment() {
 
     private val sharedViewModel: SearchSharedViewModel by activityViewModels()
 
-    var queue : String = ""
+    lateinit var queue : String
 
     override fun onCreateView(
         inflater: LayoutInflater,

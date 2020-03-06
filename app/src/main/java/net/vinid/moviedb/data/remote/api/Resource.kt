@@ -3,7 +3,7 @@ package net.vinid.moviedb.data.remote.api
 class Resource<T> constructor(val status: Status, var data: T? = null, val message: String? = null) {
 
     companion object {
-        fun <T> success(data: T?): Resource<T> {
+        fun <T> success(data: T): Resource<T> {
             return Resource(status = Status.SUCCESS, data = data)
         }
 
