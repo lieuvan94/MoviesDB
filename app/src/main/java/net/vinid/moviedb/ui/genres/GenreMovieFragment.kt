@@ -27,7 +27,7 @@ class GenreMovieFragment : BaseFragment() {
     private var genreMovieAdapter: MoviesAdapter? = null
 
     @Inject
-    lateinit var genreViewModel: GenreViewModel
+    lateinit var genreViewModel: GenresViewModel
 
     private val firstPage = 1
 

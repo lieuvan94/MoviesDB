@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import net.vinid.moviedb.data.model.MovieItem
 import net.vinid.moviedb.data.repository.MovieRepository
-import net.vinid.moviedb.mapper.toMovieItem
+import net.vinid.moviedb.data.mapper.toMovieItem
 import net.vinid.moviedb.ui.base.BaseViewModel
 import net.vinid.moviedb.ui.common.EventWrapper
 import javax.inject.Inject
 
-class GenreViewModel @Inject constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
+class GenresViewModel @Inject constructor(
+    private val movieRepository: MovieRepository
+) : BaseViewModel() {
     private val _genreListMovie = MutableLiveData<ArrayList<MovieItem>>()
     val genreListMovie: LiveData<ArrayList<MovieItem>> get() = _genreListMovie
 

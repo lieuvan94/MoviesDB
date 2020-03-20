@@ -12,8 +12,9 @@ import io.reactivex.schedulers.Schedulers
 abstract class NetworkBoundResource<ResultType, RequestType> {
 
     fun getResource(): Observable<Resource<ResultType>> {
-        return loadFromDb().toObservable().map { t -> Resource.success(t) }
-            .concatWith(
+        return loadFromDb().toObservable().map {resultType ->
+                Resource.success(resultType)
+            }.concatWith(
                 // call API
                 this.createCall()
                 .doOnNext {

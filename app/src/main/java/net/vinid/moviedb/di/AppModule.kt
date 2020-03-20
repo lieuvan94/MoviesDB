@@ -13,6 +13,8 @@ import net.vinid.moviedb.data.repository.MovieRepository
 import net.vinid.moviedb.data.repository.MovieRepositoryImpl
 import net.vinid.moviedb.utils.ConfigUtils
 import net.vinid.moviedb.utils.ConstStrings
+import net.vinid.moviedb.utils.rx.AppSchedulerProvider
+import net.vinid.moviedb.utils.rx.SchedulerProvider
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -21,20 +23,24 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-class DataModule {
+internal object AppModule {
+
     @Provides
+    @JvmStatic
     @Singleton
     fun provideMovieLocalDataSource(movieDAOImpl: MovieDAOImpl): MovieDAO{
         return movieDAOImpl
     }
 
     @Provides
+    @JvmStatic
     @Singleton
     fun provideMovieRemoteDataSource(retrofit: Retrofit): APIService{
         return retrofit.create(APIService::class.java)
     }
 
     @Provides
+    @JvmStatic
     @Singleton
     fun provideOkHttpClient(context: Context): OkHttpClient {
         return OkHttpClient().newBuilder()
@@ -47,6 +53,7 @@ class DataModule {
     }
 
     @Provides
+    @JvmStatic
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
@@ -57,7 +64,13 @@ class DataModule {
             .build()
     }
 
+    @Singleton
+    @JvmStatic
     @Provides
+    fun provideSchedulerProvider(): SchedulerProvider = AppSchedulerProvider()
+
+    @Provides
+    @JvmStatic
     @Singleton
     fun provideRealm(context: Context): Realm {
         Realm.init(context)
@@ -67,6 +80,7 @@ class DataModule {
     }
 
     @Provides
+    @JvmStatic
     @Singleton
     fun provideRepository(repositoryImpl: MovieRepositoryImpl): MovieRepository {
         return repositoryImpl

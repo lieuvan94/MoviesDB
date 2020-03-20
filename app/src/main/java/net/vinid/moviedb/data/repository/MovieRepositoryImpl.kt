@@ -6,8 +6,8 @@ import io.realm.RealmList
 import net.vinid.moviedb.data.local.dao.MovieDAO
 import net.vinid.moviedb.data.local.entity.GenreEntity
 import net.vinid.moviedb.data.local.entity.MovieEntity
-import net.vinid.moviedb.mapper.toGenreEntity
-import net.vinid.moviedb.mapper.toMovieEntity
+import net.vinid.moviedb.data.mapper.toGenreEntity
+import net.vinid.moviedb.data.mapper.toMovieEntity
 import net.vinid.moviedb.data.remote.api.APIService
 import net.vinid.moviedb.data.remote.api.NetworkBoundResource
 import net.vinid.moviedb.data.remote.api.Resource
@@ -119,5 +119,14 @@ class MovieRepositoryImpl @Inject constructor(
 
     override fun getMoviesLiked(): Observable<Resource<List<MovieEntity>>> {
         return Observable.just(Resource.success(localDataSource.getMoviesLiked()))
+    }
+
+    override fun searchMoviesByQuery(query: String, page: Int): Observable<List<MovieEntity>> {
+        return remoteDataSource.searchMoviesByQuery(query,page)
+            .map {
+                it.results.toMovieEntity("",page)
+            }.onErrorResumeNext(
+                Observable.just(localDataSource.searchMoviesByQuery(query))
+            )
     }
 }

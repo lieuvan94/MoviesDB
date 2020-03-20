@@ -1,4 +1,4 @@
-package net.vinid.moviedb.mapper
+package net.vinid.moviedb.data.mapper
 
 import io.realm.RealmList
 import net.vinid.moviedb.data.local.entity.GenreEntity

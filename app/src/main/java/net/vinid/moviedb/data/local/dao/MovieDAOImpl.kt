@@ -116,4 +116,31 @@ class MovieDAOImpl @Inject constructor(private val realm: Realm) : MovieDAO {
         }
         return listMovies
     }
+
+    override fun getMoviesByPage(page: Int): List<MovieEntity> {
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(ConfigUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .equalTo(ConstStrings.COLUMN_PAGE, page)
+            .findAll()
+        if (!realmResult.isNullOrEmpty()) {
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
+    }
+
+    override fun searchMoviesByQuery(query: String): List<MovieEntity> {
+        val listMovie = ArrayList<MovieEntity>()
+        val realmResult = Realm.getInstance(ConfigUtils.initRealmConfig())
+            .where(MovieEntity::class.java)
+            .contains(ConstStrings.COLUMN_MOVIE_TITLE, query)
+            .findAll()
+            .distinctBy {
+                it.title
+            }
+        if (!realmResult.isNullOrEmpty()){
+            listMovie.addAll(realmResult)
+        }
+        return listMovie
+    }
 }

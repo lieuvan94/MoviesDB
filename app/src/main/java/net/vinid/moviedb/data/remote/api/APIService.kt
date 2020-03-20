@@ -18,4 +18,10 @@ interface APIService {
 
     @GET("genre/movie/list")
     fun getListGenres(): Observable<ListGenresResponse>
+
+    @GET("search/movie")
+    fun searchMoviesByQuery(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): Observable<ListMovieResponse>
 }
