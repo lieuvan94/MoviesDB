@@ -60,14 +60,16 @@ class SearchFragment : BaseFragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchJob?.cancel()
-                searchJob = coroutineScope.launch {
-                    newText?.let {
-                        delay(ConstStrings.REQUEST_DELAY)
-                        if (it.isEmpty()) {
-                            sharedViewModel.keyword.value = newText
-                        } else {
-                            sharedViewModel.keyword.value = newText
+                if (newText!=null){
+                    searchJob?.cancel()
+                    searchJob = coroutineScope.launch {
+                        newText.let {
+                            delay(ConstStrings.REQUEST_DELAY)
+                            if (it.isEmpty()) {
+                                sharedViewModel.keyword.value = newText
+                            } else {
+                                sharedViewModel.keyword.value = newText
+                            }
                         }
                     }
                 }

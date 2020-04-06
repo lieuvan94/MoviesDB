@@ -12,7 +12,6 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:navigationIcon="@drawable/icon_back_white"
             android:background="@color/backgroundBottomNav"
             app:titleTextColor="@android:color/white"
             android:layout_width="@dimen/width_0dp"

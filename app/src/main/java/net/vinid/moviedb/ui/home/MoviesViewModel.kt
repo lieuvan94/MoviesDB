@@ -61,7 +61,7 @@ class MoviesViewModel @Inject constructor(
             MOVIE_POPULAR -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
-                        .filter { v -> !v.data!!.isEmpty() }
+                        .filter { v -> v.data!!.isNotEmpty() }
                         .switchIfEmpty { _popularMovie.value = ArrayList() }
                         .take(1)
                         .map {
@@ -78,7 +78,7 @@ class MoviesViewModel @Inject constructor(
             MOVIE_TOP_RATES -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
-                        .filter { v -> !v.data!!.isEmpty() }
+                        .filter { v -> v.data!!.isNotEmpty() }
                         .switchIfEmpty { _topRates.value = ArrayList() }
                         .take(1)
                         .map {
@@ -96,7 +96,7 @@ class MoviesViewModel @Inject constructor(
             MOVIE_UPCOMING -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
-                        .filter { v -> !v.data!!.isEmpty() }
+                        .filter { v -> v.data!!.isNotEmpty() }
                         .switchIfEmpty { _upComing.value = ArrayList() }
                         .take(1)
                         .map {
@@ -113,7 +113,7 @@ class MoviesViewModel @Inject constructor(
             MOVIE_NOW_PLAYING -> {
                 addToDisposable(
                     movieRepository.getMovieByCategory(category, page)
-                        .filter { v -> !v.data!!.isEmpty() }
+                        .filter { v -> v.data!!.isNotEmpty() }
                         .switchIfEmpty { _nowPlayingMovie.value = ArrayList() }
                         .take(1)
                         .map {
@@ -132,7 +132,7 @@ class MoviesViewModel @Inject constructor(
     fun requestGetListGenres(){
         addToDisposable(
             movieRepository.getListGenres()
-                .filter { v -> !v.data!!.isEmpty() }
+                .filter { v -> v.data!!.isNotEmpty() }
                 .switchIfEmpty { _genres.value = ArrayList() }
                 .take(1)
                 .map {

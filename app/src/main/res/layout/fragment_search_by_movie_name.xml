@@ -20,7 +20,7 @@
         layout="@layout/view_list_movies"
         android:layout_width="@dimen/size_0dp"
         android:layout_height="@dimen/size_0dp"
-        app:isVisible ="@{viewModel.listMoviesVisible}"
+        app:isVisible ="@{!viewModel.listMoviesVisible}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

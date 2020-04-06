@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,8 @@ import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_NOW_PLAYING
 import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_POPULAR
 import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_TOP_RATES
 import net.vinid.moviedb.utils.ConstStrings.Companion.MOVIE_UPCOMING
+import net.vinid.moviedb.utils.ConstStrings.Companion.REMOVE_COLLECTION
+import net.vinid.moviedb.utils.ConstStrings.Companion.SAVE_COLLECTION
 import javax.inject.Inject
 
 /**
@@ -34,7 +38,8 @@ class HomeFragment : BaseFragment() {
     private lateinit var dataBinding: FragmentHomeBinding
 
     @Inject
-    lateinit var moviesViewModel: MoviesViewModel
+    lateinit var viewModelFactory : ViewModelProvider.Factory
+    private val moviesViewModel: MoviesViewModel by viewModels { viewModelFactory }
 
     private lateinit var popularMovieAdapter: MoviesAdapter
     private lateinit var upComingMovieAdapter: MoviesAdapter
@@ -58,6 +63,7 @@ class HomeFragment : BaseFragment() {
         initViewModel()
         initLoadMore()
         initSwipeToRefresh()
+        initToolbar()
 
         moviesViewModel.requestGetListGenres()
 
@@ -169,6 +175,11 @@ class HomeFragment : BaseFragment() {
         topRateMovieAdapter.changeMovieFavoriteStatus(movieItem.movieEntity.movieId)
         moviesViewModel.requestUpdateMovieStatus(movieItem.movieEntity, movieItem.favoriteStatus)
         val rootView = activity as MainActivity
+        if(movieItem.favoriteStatus){
+            rootView.showMes(SAVE_COLLECTION)
+        }else{
+            rootView.showMes(REMOVE_COLLECTION)
+        }
     }
 
     private fun showMovieByGenre(genre: GenreItem) {
@@ -234,6 +245,11 @@ class HomeFragment : BaseFragment() {
         includedUpComingMovieLayout.moviesRecyclerView.scrollToPosition(upComingListState)
         includedTopRateMovieLayout.moviesRecyclerView.scrollToPosition(topRateListState)
         includedNowPlayingMovieLayout.moviesRecyclerView.scrollToPosition(nowPlayingListState)
+    }
+
+    private fun initToolbar() {
+        (activity as MainActivity).setSupportActionBar(dataBinding.toolbar)
+        dataBinding.toolbar.title = getString(R.string.title_home)
     }
 }
 

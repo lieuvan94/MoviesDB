@@ -56,7 +56,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.BindingHolder>(){
 
     fun changeMovieFavoriteStatus(movieId: Int){
         for (item in dataList){
-            if (item.movieEntity.movieId.equals(movieId)){
+            if (item.movieEntity.movieId == movieId){
                 item.changeFavoriteStatus()
             }
         }

@@ -1,12 +1,15 @@
 package net.vinid.moviedb.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.vinid.moviedb.R
@@ -27,11 +30,10 @@ class SearchByMoviesNameFragment : BaseFragment() {
     private lateinit var searchMoviesAdapter: MoviesAdapter
 
     @Inject
-    lateinit var searchMoviesViewModel: SearchMoviesViewModel
+    lateinit var viewModelFactory : ViewModelProvider.Factory
+    private val searchMoviesViewModel: SearchMoviesViewModel by viewModels { viewModelFactory }
 
     private val sharedViewModel: SearchSharedViewModel by activityViewModels()
-
-    lateinit var queue : String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,13 +60,14 @@ class SearchByMoviesNameFragment : BaseFragment() {
 
     private fun initViewModel() {
         sharedViewModel.keyword.observe(viewLifecycleOwner, Observer {
-            queue = it
             searchMoviesViewModel.requestSearchMovieByPage(it,ConstStrings.QUERY_PAGE)
             searchMoviesViewModel.searchMovies.observe(viewLifecycleOwner, Observer {movies->
                 updateMoviesList(movies)
+                loadMore(it)
+                Log.d("ListMovies",searchMoviesAdapter.itemCount.toString())
             })
-            loadMore()
         })
+
         searchMoviesViewModel.errSearchMovies.observe(viewLifecycleOwner, Observer {
             updateMoviesList(ArrayList())
         })
@@ -73,7 +76,7 @@ class SearchByMoviesNameFragment : BaseFragment() {
         searchMoviesAdapter.setItems(movies)
     }
 
-    private fun loadMore(){
+    private fun loadMore(queue: String){
         val scrollListener = object : EndlessRecyclerViewScrollListener(dataBinding.includedListMovieLayout.moviesRecyclerView.layoutManager
                 as GridLayoutManager){
             override fun setLastPosition(view: RecyclerView) {

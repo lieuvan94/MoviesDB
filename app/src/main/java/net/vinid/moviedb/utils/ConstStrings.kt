@@ -28,5 +28,7 @@ class ConstStrings {
         const val COLUMN_RECYCLEVIEW = 3
         const val QUERY_PAGE = 1
         const val REQUEST_DELAY = 500L
+        const val SAVE_COLLECTION = "Save to Collection."
+        const val REMOVE_COLLECTION = "Remove from Collection."
     }
 }

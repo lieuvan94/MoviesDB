@@ -24,6 +24,17 @@
             android:layout_height="match_parent"
             android:background="@color/backgroundScreen">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:background="@color/backgroundBottomNav"
+                app:titleTextColor="@android:color/white"
+                android:layout_width="@dimen/width_0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" >
+            </androidx.appcompat.widget.Toolbar>
+
             <include
                 app:title="@{@string/popular_movies_label}"
                 app:isVisible ="@{viewModel.popularMovieVisible}"
@@ -34,7 +45,7 @@
                 android:layout_marginTop="@dimen/margin_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
             <include
                 app:title="@{@string/now_playing_movies_label}"

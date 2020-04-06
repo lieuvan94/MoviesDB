@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import net.vinid.moviedb.MainActivity
 import net.vinid.moviedb.R
 import net.vinid.moviedb.data.model.MovieItem
@@ -23,7 +25,8 @@ class FavoritesFragment : BaseFragment() {
     private var favoriteMovieAdapter: MoviesAdapter? = null
 
     @Inject
-    lateinit var favoriteViewModel: FavoriteViewModel
+    lateinit var viewmodelFactory: ViewModelProvider.Factory
+    private val favoriteViewModel: FavoriteViewModel by viewModels{viewmodelFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,

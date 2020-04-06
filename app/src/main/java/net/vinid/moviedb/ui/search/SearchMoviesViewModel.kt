@@ -38,6 +38,7 @@ class SearchMoviesViewModel @Inject constructor(
                     else movieRepository.searchMoviesByQuery(it, page)
                 }.subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
+                    .distinct()
                     .subscribe({
                         _searchMovies.value = it.toMovieItem()
                     },{
